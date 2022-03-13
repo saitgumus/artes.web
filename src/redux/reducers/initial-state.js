@@ -38,18 +38,6 @@ export default {
     messageType: "",
     message: "",
   },
-  blockList: [
-    {
-      siteId: -1,
-      code: "",
-    },
-  ],
-  apertment: {
-    Name: "",
-  },
-  site: {
-    Name: "",
-  },
   actionListInfo: {
     actionKeyList: [],
     resourceCode: "",
