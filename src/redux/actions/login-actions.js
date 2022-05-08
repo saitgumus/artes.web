@@ -62,6 +62,11 @@ export function ChangeLoginToNewPassword(email) {
   };
 }
 
+/**
+ * kullanıcı login olur
+ * @param {User} user login kullanıcısı
+ * @returns 
+ */
 export function Login(user) {
   return function (dispatch) {
     return LoginUser(user)

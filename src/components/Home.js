@@ -206,9 +206,7 @@ class Home extends Component {
                                     allRowsIndexes,
                                     rowsSelectedIndex
                                 ) => {
-                                    console.log(currentRowIndex);
-                                    console.log(allRowsIndexes);
-                                    console.log(rowsSelectedIndex);
+                                 
                                     if(this.state.hotelList && this.state.hotelList.length > 0 && rowsSelectedIndex){
                                         var selectedData = this.state.hotelList[rowsSelectedIndex];
                                         this.state.selectedHotel = selectedData

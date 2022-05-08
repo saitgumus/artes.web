@@ -44,20 +44,12 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    // this.props.actions.changeLoginStatus({
-    //   token: "",
-    //   expiration: new Date(),
-    //   isSuccess: false,
-    // });
-    //dev ortamı için otomatik login
-    this.props.actions.loginUser({
-      firstName: "artes",
-      lastName: "artes",
-      userName: "",
-      email: "asd",
-      password: "asd",
-      memberId: 0,
+    this.props.actions.changeLoginStatus({
+      token: "",
+      expiration: new Date(),
+      isSuccess: false,
     });
+
   }
 
   validateEmail(e) {
