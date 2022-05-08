@@ -8,6 +8,7 @@ import MuiDialogActions from "@material-ui/core/DialogActions";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
+import PropTypes from "prop-types";
 
 const styles = (theme) => ({
   root: {
@@ -62,18 +63,14 @@ const DialogActions = withStyles((theme) => ({
 export default function DialogForm(props) {
   const [open, setOpen] = React.useState(true);
 
-  // const handleClickOpen = () => {
-  //     setOpen(true);
-  // };
-
   const handleClose = () => {
     if (props.handleClose) props.handleClose();
 
     setOpen(false);
   };
 
+
   return (
-    <div>
       <Dialog
         onClose={handleClose}
         fullWidth={true}
@@ -97,6 +94,11 @@ export default function DialogForm(props) {
           )}
         </DialogActions>
       </Dialog>
-    </div>
   );
+}
+
+DialogForm.propTypes = {
+ actions: PropTypes.any,
+ content:PropTypes.any.isRequired,
+ title:PropTypes.any.isRequired
 }

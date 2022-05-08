@@ -19,6 +19,8 @@ class ActionBar extends Component {
     switch (key) {
       case CommonTypes.ActionKeys.CreateDistributor:
         return <SaveIcon/>
+        case CommonTypes.ActionKeys.CreateHotel:
+        return <SaveIcon/>
       case CommonTypes.ActionKeys.Save:
         return <SaveIcon />;
       case CommonTypes.ActionKeys.GetList:

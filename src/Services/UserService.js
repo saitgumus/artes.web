@@ -14,7 +14,7 @@ import User from "../Models/User";
 export async function LoginUser(userContract) {
   let response = new Response();
   let contract = userContract;
-  let url = CommonTypes.GetUrlForAPI("user", "login");
+  let url = CommonTypes.GetUrlForAPI("auth", "login");
 
   Cache.setItem("lastloginrequestuser", contract);
 
@@ -23,7 +23,7 @@ export async function LoginUser(userContract) {
       if (res.data.success) {
         //parola değişikliği gerekiyor mu?
         if (
-          res.data.value.accessToken &&
+          res.data.data.accessToken &&
           res.data.value.accessToken.token &&
           res.data.value.accessToken.token.length > 0 &&
           res.data.value.shouldNewPassword
@@ -33,6 +33,21 @@ export async function LoginUser(userContract) {
           );
           response.value = { shouldNewPassword: true };
         } else {
+
+          if(res.data.data && res.data.data.token){
+            let token = res.data.data.token;
+            let expriation = res.data.data.expiration;
+            HttpClientServiceInstance.setTokenOnLogin(token);
+
+            let user = new User();
+            user.token = token;
+            user.expiration = expriation;
+            response.value = user;
+          }else {
+            response.addResult("Token bilgisi alınamadı.",Severity.High);
+          }
+
+          /*
           let userData = res.data.value.userDefinitionContract;
 
           let user = new User();
@@ -65,6 +80,9 @@ export async function LoginUser(userContract) {
 
           response.value = user;
           SetUserResources(user.resourceActionList);
+
+           */
+
         }
       } else {
         response.addCoreResults(res.data.results);
@@ -73,6 +91,7 @@ export async function LoginUser(userContract) {
     .catch((e) => {
       response.addResult(e.message, Severity.High, "login");
     });
+
   return response;
 }
 

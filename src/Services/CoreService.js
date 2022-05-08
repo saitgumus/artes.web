@@ -2,6 +2,7 @@ import { CommonTypes } from "../Types/Common";
 import Cache from "./Cache";
 import { HttpClientServiceInstance } from "./HttpClient";
 import { Response, Severity } from "../Core/Response";
+import Country from "../Models/Country";
 
 /**
  * the parameter services
@@ -67,6 +68,37 @@ export async function GetRoleList() {
         Cache.lru.set("rolelist", data);
       }
       returnData = data ? data : [];
+    })
+    .catch((e) => {
+      console.log(e);
+      returnData = undefined;
+    });
+
+  return returnData;
+}
+
+/**
+ * ülke listesi getirir.
+ * @returns []
+ */
+export async function GetCountryList(){
+  let returnData = [];
+
+  await HttpClientServiceInstance.get(
+    CommonTypes.GetUrlForAPI("constants", "get-countries-list")
+  )
+    .then((res) => {
+        if(res.data && res.data.data){
+            let data = res.data.data;
+            let countryList = [];
+            if (data && data.length > 0) {
+                for (const item of data) {
+                    countryList.push({name:item.constantValue,code:item.constantCode})
+                }
+                Cache.lru.set("countrylist", data);
+            }
+            returnData = countryList;
+        }
     })
     .catch((e) => {
       console.log(e);

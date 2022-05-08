@@ -16,7 +16,9 @@ class HttpClientService {
   get(url) {
     return this.axiosInstance
       .get(url)
-      .then((resp) => {})
+      .then((resp) => {
+        return Promise.resolve(resp);
+      })
       .catch((resp) => {
         if (resp.response !== undefined && resp.response.status === 401) {
           localStorage.removeItem("user");

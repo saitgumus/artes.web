@@ -18,9 +18,9 @@ export function IsNullOrEmpty(text) {
 export function IsNullOrEmptyAll(params) {
   if (params && params.length > 0) {
     for (const item of params) {
-      if (IsNullOrEmpty(item)) return false;
+      if (IsNullOrEmpty(item)) return true;
     }
-    return true;
+    return false;
   }
   return false;
 }

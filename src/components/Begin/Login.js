@@ -44,20 +44,20 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    this.props.actions.changeLoginStatus({
-      token: "",
-      expiration: new Date(),
-      isSuccess: false,
-    });
-    //dev ortamı için otomatik login
-    // this.props.actions.loginUser({
-    //   firstName: "Fatih",
-    //   lastName: "Gümüs",
-    //   userName: "",
-    //   email: "fatihgumus33@gmail.com",
-    //   password: "password",
-    //   memberId: 0,
+    // this.props.actions.changeLoginStatus({
+    //   token: "",
+    //   expiration: new Date(),
+    //   isSuccess: false,
     // });
+    //dev ortamı için otomatik login
+    this.props.actions.loginUser({
+      firstName: "artes",
+      lastName: "artes",
+      userName: "",
+      email: "asd",
+      password: "asd",
+      memberId: 0,
+    });
   }
 
   validateEmail(e) {
@@ -78,6 +78,7 @@ class Login extends Component {
       ShowStatusError("mail adresinizi giriniz.");
       return;
     }
+
 
     await ForgotPassword(user)
       .then((res) => {

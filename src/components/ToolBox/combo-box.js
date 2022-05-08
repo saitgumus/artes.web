@@ -11,10 +11,10 @@ class ComboBox extends Component {
 
     constructor(props) {
         super(props);
-        let defaultVal = [{name: 'Seçiniz'}]
+        let defaultList = [{name: 'Seçiniz'}]
         this.state = {
             defaultValue: props.defaultValue ? props.defaultValue : undefined,
-            dataList: props.itemSource && props.itemSource.length > 0 ? props.itemSource:defaultVal,
+            dataList: props.itemSource && props.itemSource.length > 0 ? props.itemSource:defaultList,
             selectedValue: {name: 'Seçiniz'},
             isDisable: props.disabled,
             label: props.label
@@ -22,9 +22,9 @@ class ComboBox extends Component {
     }
 
     componentDidMount() {
-        let tempList = [{name: 'Seçiniz'}];
+        let tempList = [];
         if (this.props.itemSource.length > 0) {
-            tempList.push.apply(this.props.itemSource)
+            tempList.push(...this.props.itemSource);
         }
         this.setState({dataList:tempList,selectedValue:tempList[0]})
         if(this.props.defaultValue){
@@ -57,7 +57,7 @@ class ComboBox extends Component {
                     value={this.state.selectedValue}
                     getOptionLabel={(option) => option.name}
                     renderInput={(params) => (
-                        <TextField {...params} label={this.state.label} variant="outlined"/>
+                        <TextField {...params} label={this.state.label} variant="outlined" fullWidth={this.props.fullWidth}/>
                     )}
                     onChange={(e, value, reason) => {
                         this.setState({selectedValue: value})
@@ -79,6 +79,7 @@ ComboBox.propTypes = {
     label: PropTypes.string.isRequired,
     onSelectedItemChange: PropTypes.func,
     itemSource: PropTypes.array.isRequired,
+    fullWidth: PropTypes.bool
 };
 
 export default ComboBox;

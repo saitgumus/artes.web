@@ -82,6 +82,8 @@ export class CommonTypes {
     Refresh:"REFRESH",
     /** create distributor */
     CreateDistributor:"CREATEDIST",
+    /** create a hotel */
+    CreateHotel:"CREATEHOTEL",
     /**
      * kaydet
      */
@@ -152,7 +154,7 @@ export class CommonTypes {
     home: {
       resourceCode: "HOME",
       actionKeys: [
-        CommonTypes.ActionKeys.CreateDistributor,
+        CommonTypes.ActionKeys.CreateHotel,
         CommonTypes.ActionKeys.Refresh
       ],
     },
@@ -304,6 +306,8 @@ export function getActionLabel(key) {
   switch (key) {
     case CommonTypes.ActionKeys.CreateDistributor:
       return Messages.ActionNames.createDistributor;
+      case CommonTypes.ActionKeys.CreateHotel:
+        return Messages.ActionNames.createHotel;
     case CommonTypes.ActionKeys.Save:
       return Messages.ActionNames.save;
     case CommonTypes.ActionKeys.GetList:

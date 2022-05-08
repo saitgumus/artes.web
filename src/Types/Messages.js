@@ -25,6 +25,8 @@ export default class Messages {
     refresh:"Refresh",
     /** distributor kaydet */
     createDistributor: "Create distributor",
+    /** otel ekle */
+    createHotel: "Create Hotel",
     /**kaydet */
     save: "Kaydet",
     /**giriş yap */
