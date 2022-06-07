@@ -1,4 +1,5 @@
 import axios from "axios";
+import { CommonTypes } from "../Types/Common";
 
 class HttpClientService {
   constructor() {
@@ -39,10 +40,26 @@ class HttpClientService {
         if (resp.response !== undefined && resp.response.status === 401) {
           console.log("unauthorized!!");
           localStorage.removeItem("user");
-          window.location.replace("http://localhost:3000");
+          window.location.replace(CommonTypes.URLaddress);
         }
         return Promise.reject(resp);
       });
+  }
+
+  put(url,data){
+    return this.axiosInstance
+    .put(url,data)
+    .then( res => {
+      return Promise.resolve(res);
+    })
+    .catch( resp => {
+      if (resp.response !== undefined && resp.response.status === 401) {
+        console.log("unauthorized!!");
+        localStorage.removeItem("user");
+        window.location.replace(CommonTypes.URLaddress);
+      }
+      return Promise.reject(resp);
+    })
   }
 
   setTokenOnLogin = (token = "") => {

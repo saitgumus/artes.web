@@ -14,7 +14,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as cityActions from "../../redux/actions/city-county-actions";
 import * as loginActions from "../../redux/actions/login-actions";
-import GoogleLoginComponent from "./google/google-login";
 import {
   IsNullOrEmpty,
   ShowStatusError,
@@ -59,7 +58,9 @@ class Login extends Component {
     if (emailRex.test(e.target.value)) {
       validate.emailState = "has-success";
     } else {
-      validate.emailState = "has-danger";
+  //TODO: validasyonu geçici olarak kaldırdım geri açılacak.
+      validate.emailState = "has-success";
+//      validate.emailState = "has-danger";
     }
     this.setState({ validate });
   }
@@ -204,10 +205,7 @@ class Login extends Component {
                 </Grid>
                 <Grid item>
                   <hr />
-                </Grid>
-                <Grid item>
-                  <GoogleLoginComponent />
-                </Grid>
+                </Grid>             
               </Grid>
     );
   }

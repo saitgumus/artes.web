@@ -44,7 +44,8 @@
     "recharts": "^1.8.5",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "string-builder": "^0.1.6"
+    "string-builder": "^0.1.6",
+    "yarn": "^1.22.18"
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.5",

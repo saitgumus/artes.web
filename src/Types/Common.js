@@ -132,6 +132,7 @@ export class CommonTypes {
     read: "read",
     examine: "examine",
     giveoffer: "giveoffer",
+    edit:"edit"
   };
 
   /**
@@ -155,114 +156,11 @@ export class CommonTypes {
       resourceCode: "HOME",
       actionKeys: [
         CommonTypes.ActionKeys.CreateHotel,
-        CommonTypes.ActionKeys.Refresh
+        CommonTypes.ActionKeys.Refresh,
+        CommonTypes.ActionKeys.Edit
       ],
     },
-    /**
-     * site apartman ekle
-     */
-    defineSiteApartment: {
-      /**
-       * DEFAPT
-       */
-      resourceCode: "DEFAPT",
-      actionKeys: [CommonTypes.ActionKeys.Save],
-    },
-    /**
-     * üye tanımlama
-     */
-    defineMember: {
-      resourceCode: "DEFMEM",
-      actionKeys: [CommonTypes.ActionKeys.Save],
-    },
-    /**
-     * üye listeleme
-     */
-    memberList: {
-      resourceCode: "DEFLST",
-      actionKeys: [CommonTypes.ActionKeys.GetList, CommonTypes.ActionKeys.Edit],
-    },
-    /**
-     * kullanıcı profili
-     */
-    userProfile: {
-      resourceCode: "USRPRF",
-      actionKeys: [CommonTypes.ActionKeys.Close],
-    },
-    /**
-     * gelen kutusu
-     */
-    userInbox: {
-      resourceCode: "USRINB",
-      actionKeys: [CommonTypes.ActionKeys.GetList, CommonTypes.ActionKeys.Read],
-    },
-    /**
-     * Anket tanımlama
-     */
-    VoteDefine: {
-      resourceCode: "VTEDEF",
-      actionKeys: [CommonTypes.ActionKeys.Save, CommonTypes.ActionKeys.Clean],
-    },
-    /**
-     * oy kullanma ve sonuç görme
-     */
-    VotingAndResult: {
-      resourceCode: "VTNRES",
-      actionKeys: [CommonTypes.ActionKeys.GetList],
-    },
-    /**
-     * masraf giriş
-     */
-    ExpenseEntry: {
-      resourceCode: "EXPENT",
-      actionKeys: [CommonTypes.ActionKeys.Save],
-    },
-    /**
-     * masraf giriş
-     */
-    ExpenseList: {
-      resourceCode: "EXPLST",
-      actionKeys: [
-        CommonTypes.ActionKeys.GetList,
-        CommonTypes.ActionKeys.Examine,
-      ],
-    },
-    /**
-     * ihale tanımlama
-     *
-     */
-    TenderDefining: {
-      resourceCode: "TNRDEF",
-      actionKeys: [CommonTypes.ActionKeys.Save],
-    },
-    /**
-     * ihale listeleme
-     */
-    TenderListing: {
-      resourceCode: "TNRLST",
-      actionKeys: [
-        CommonTypes.ActionKeys.GetList,
-        CommonTypes.ActionKeys.Examine,
-        CommonTypes.ActionKeys.GiveOffer,
-      ],
-    },
-    /**
-     * aidat ödeme
-     */
-    DuesPayment: {
-      resourceCode: "DUESPY",
-      actionKeys: [CommonTypes.ActionKeys.Divit, CommonTypes.ActionKeys.Save],
-    },
-    /**
-     * aidat listeleme
-     */
-    DuesListing: {
-      resourceCode: "DUESLS",
-      actionKeys: [
-        CommonTypes.ActionKeys.GetList,
-        CommonTypes.ActionKeys.Examine,
-      ],
-    },
+   
   };
 
   /**
@@ -320,12 +218,6 @@ export function getActionLabel(key) {
       return Messages.ActionNames.examine;
     case CommonTypes.ActionKeys.Read:
       return Messages.ActionNames.read;
-    case CommonTypes.ActionKeys.AddAgreement:
-      return "Sözleşme Ekle";
-    case CommonTypes.ActionKeys.GiveOffer:
-      return "Teklif Ver";
-    case CommonTypes.ActionKeys.Divit:
-      return "Divit";
     case CommonTypes.ActionKeys.Refresh:
       return Messages.ActionNames.refresh;  
 

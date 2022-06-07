@@ -7,10 +7,9 @@ import {Card, Grid, Typography, CardHeader, CardContent, Avatar, TextField} from
 import DataTable from "./ToolBox/DataTable";
 import DialogForm from "./ToolBox/dialog-form";
 import {GetCountryList} from "../Services/CoreService";
-import {IsNullOrEmpty, ShowStatusError, ShowStatusSuccess} from "../Core/Helper";
-import ComboBox from "./ToolBox/combo-box";
+import { ShowStatusError, ShowStatusSuccess} from "../Core/Helper";
 import Button from "@material-ui/core/Button";
-import {GetHotels, SaveHotel} from "../Services/HotelService";
+import {GetHotels, SaveHotel, UpdateHotel} from "../Services/HotelService";
 import LoadingOverlay from "react-loading-overlay"
 import HotelModel from "../Models/hotel/HotelModel";
 import HotelAdd from "./hotel-add";
@@ -27,6 +26,7 @@ class Home extends Component {
 
         this.state = {
             isOpenDialogForm: false,
+            isOpenDialogForUpdate:false,
             hotel: {},
             countryList: [],
             hotelList:[],
@@ -99,8 +99,16 @@ class Home extends Component {
         switch (key) {
             ///create hotel
             case CommonTypes.ActionKeys.CreateHotel:
-                this.setState({isOpenDialogForm: true})
+                this.setState({isOpenDialogForm: true,isOpenDialogForUpdate:false})
                 break;
+            
+            case CommonTypes.ActionKeys.Edit:
+                if(!this.state.selectedHotel.hotelId || this.state.selectedHotel.hotelId < 1){
+                    ShowStatusError("güncelleme yapmak için kayıt seçmeniz gerekmektedir.");
+                    return;
+                }
+                    this.setState({isOpenDialogForm: true,isOpenDialogForUpdate:true})
+                    break;    
             case CommonTypes.ActionKeys.GetList:
                 this.getList();
                 break;
@@ -145,6 +153,26 @@ class Home extends Component {
        }
 
     }
+
+    onUpdate =async (hotelContract) => {
+        debugger;
+        var hotelModel = new HotelModel();
+        hotelModel = {...hotelContract};
+        hotelModel.allowGeneralCard = false;
+        hotelModel.contactType = 1;
+
+       var response = await UpdateHotel(hotelModel);
+        if(!response || !response.success){
+            ShowStatusError(response.getResultsStringFormat());
+            return;
+        }
+       if(response && response.success){
+           ShowStatusSuccess("güncellendi.");
+           await this.getList();
+       }
+
+    }
+
 
     async getList(){
         this.setState({isLoading:true})
@@ -220,7 +248,11 @@ class Home extends Component {
                         <DialogForm
                             count={this.state.renderCount}
                             title={"Create Hotel"}
-                            content={(<HotelAdd countryList={this.state.countryList} setHotel={this.setHotel} />)}
+                            content={(<HotelAdd 
+                                countryList={this.state.countryList} 
+                                setHotel={this.setHotel}
+                                isUpdate={this.state.isOpenDialogForUpdate}
+                                hotelModel={this.state.selectedHotel} />)}
                             handleClose={this.handleCloseDialog}
                             actions={(
                                 <Button autoFocus
@@ -230,7 +262,12 @@ class Home extends Component {
                                         return;
                                     }
                                     this.handleCloseDialog()
-                                    this.onCreate(this.state.hotel)
+                                    if(this.state.isOpenDialogForUpdate){
+                                        this.onUpdate(this.state.hotel)
+                                    }
+                                    else{
+                                        this.onCreate(this.state.hotel)
+                                    }
                                 }} color="primary">
                                     Gönder
                                 </Button>

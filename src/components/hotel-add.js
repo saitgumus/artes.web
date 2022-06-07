@@ -15,7 +15,11 @@ class HotelAdd extends Component {
         super(props);
         this.state = {
             renderCount:0,
-            hotel: {
+            isUpdate:this.props.isUpdate,
+            hotel: 
+            this.props.hotelModel ?
+            this.props.hotelModel :
+            {
                 validSectors:"1,2,3,4,5,6,7,8,9,10"
             },
             countryList: props.countryList && props.countryList.length > 0 ? props.countryList : [],
@@ -72,6 +76,7 @@ class HotelAdd extends Component {
         GetIntValue(this.state.hotel.countryCode)< 1 ||
         GetIntValue(this.state.hotel.mobileCountryCode)< 1){
         return;
+        
     }
 
     if(this.props.setHotel) this.props.setHotel(this.state.hotel)
@@ -102,6 +107,7 @@ class HotelAdd extends Component {
                                 helperText={this.state.validation.hotelName.helperText}
                                 label="Hotel Name"
                                 variant="standard"
+                                value={this.state.hotel && this.state.hotel.hotelName}
                                 onChange={(e) => {
                                     this.state.hotel.hotelName = e.target.value
                                     this.validateAndSetHotel();
@@ -128,6 +134,7 @@ class HotelAdd extends Component {
                                 type={"number"}
                                 label="Hotel Code"
                                 variant="standard"
+                                value={this.state.hotel.hotelCode}
                                 onChange={(e) => {
                                     this.state.hotel.hotelCode = parseInt(e.target.value);
                                     this.validateAndSetHotel();
@@ -165,6 +172,7 @@ class HotelAdd extends Component {
                                 helperText={this.state.validation.hotelAdminName.helperText}
                                 label="Admin Name"
                                 variant="standard"
+                                value={this.state.hotel.hotelAdminName}
                                 onChange={(e) => {
                                     this.state.hotel.hotelAdminName = e.target.value;
                                     this.validateAndSetHotel();
@@ -190,6 +198,7 @@ class HotelAdd extends Component {
                                 helperText={this.state.validation.hotelAdminMail.helperText}
                                 label="Admin Email"
                                 variant="standard"
+                                value={this.state.hotel.hotelAdminMail}
                                 onChange={(e) => {
                                     this.state.hotel.hotelAdminMail = e.target.value;
                                     this.validateAndSetHotel();
@@ -243,6 +252,7 @@ class HotelAdd extends Component {
                                 helperText={this.state.validation.mobileNumber.helperText}
                                 label="Mobile Phone Number"
                                 variant="standard"
+                                value={this.state.hotel.mobileNumber}
                                 onChange={(e) => {
                                     this.state.hotel.mobileNumber = e.target.value;
                                     this.validateAndSetHotel();
@@ -268,6 +278,7 @@ class HotelAdd extends Component {
                                 helperText={this.state.validation.address.helperText}
                                 label="Adres"
                                 variant="standard"
+                                value={this.state.hotel.address}
                                 onChange={(e) => {
                                     this.state.hotel.address = e.target.value;
                                     this.validateAndSetHotel();
@@ -321,8 +332,11 @@ class HotelAdd extends Component {
 
 HotelAdd.defaultProps = {
     countryList: PropTypes.array.isRequired,
-    setHotel:PropTypes.func.isRequired
+    setHotel:PropTypes.func.isRequired,
+    isUpdate:PropTypes.bool,
+    hotelModel: PropTypes.object
 };
+
 export default connect(
     mapStateToProps,
 )(HotelAdd);
