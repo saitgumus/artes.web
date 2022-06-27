@@ -58,7 +58,7 @@ export async function SaveHotel(model) {
 
 export async function UpdateHotel(model) {
     let returnObject = new Response();
-    let url = CommonTypes.GetUrlForAPI("hotels","update");
+    let url = CommonTypes.GetUrlForAPI("hotels","update-hotel");
 
     await HttpClientServiceInstance.put(url,model)
     .then( res => {

@@ -24,7 +24,7 @@ class HotelAdd extends Component {
             },
             countryList: props.countryList && props.countryList.length > 0 ? props.countryList : [],
             isLoading:true,
-            defaultCountry:{},
+            defaultCountry:undefined,
             validation:{
                 hotelName:{
                     isValid:true,
@@ -67,7 +67,18 @@ class HotelAdd extends Component {
 
     }
 
+    componentDidMount() {
+        if(this.state.hotel.countryCode && this.state.countryList.length>0){
+            // eslint-disable-next-line no-unused-expressions
+            let country = this.state.countryList.filter(val => val.code === this.state.hotel.countryCode);
+            if(country){
+                this.setState({defaultCountry:country[0]})
+            }
+        }
+    }
+
     validateAndSetHotel = ()=>{
+        this.state.hotel.validSectors = "1,2,3,4,5,6,7,8,9,10";
     if(IsNullOrEmptyAll([this.state.hotel.hotelName,this.state.hotel.hotelAdminName,
         this.state.hotel.hotelAdminMail,this.state.hotel.address,this.state.hotel.mobileNumber,this.state.hotel.validSectors])){
         return;
@@ -76,10 +87,10 @@ class HotelAdd extends Component {
         GetIntValue(this.state.hotel.countryCode)< 1 ||
         GetIntValue(this.state.hotel.mobileCountryCode)< 1){
         return;
-        
     }
 
     if(this.props.setHotel) this.props.setHotel(this.state.hotel)
+
     }
 
     render() {
@@ -107,9 +118,11 @@ class HotelAdd extends Component {
                                 helperText={this.state.validation.hotelName.helperText}
                                 label="Hotel Name"
                                 variant="standard"
-                                value={this.state.hotel && this.state.hotel.hotelName}
+                                value={this.state.hotel.hotelName}
                                 onChange={(e) => {
-                                    this.state.hotel.hotelName = e.target.value
+                                    let val = this.state.hotel;
+                                    val.hotelName = e.target.value
+                                    this.setState({hotel:{...val}});
                                     this.validateAndSetHotel();
                                 }}
                                 onBlur={()=>{
@@ -136,7 +149,10 @@ class HotelAdd extends Component {
                                 variant="standard"
                                 value={this.state.hotel.hotelCode}
                                 onChange={(e) => {
-                                    this.state.hotel.hotelCode = parseInt(e.target.value);
+                                    //this.state.hotel.hotelCode = parseInt(e.target.value);
+                                    let val = this.state.hotel;
+                                    val.hotelCode = e.target.value
+                                    this.setState({hotel:{...val}});
                                     this.validateAndSetHotel();
                                 }}
                                 onBlur={()=>{
@@ -158,8 +174,12 @@ class HotelAdd extends Component {
                                 itemSource={this.state.countryList}
                                 label="Country"
                                 fullWidth={true}
+                                defaultValue={this.state.defaultCountry}
                                 onSelectedItemChange={ (selectedValue)=>{
-                                    this.state.hotel.countryCode = selectedValue.code
+                                    //this.state.hotel.countryCode = selectedValue.code
+                                    let val = this.state.hotel;
+                                    val.countryCode = selectedValue.code;
+                                    this.setState({hotel:{...val}});
                                     this.validateAndSetHotel();
                                 }}
                             />
@@ -174,7 +194,10 @@ class HotelAdd extends Component {
                                 variant="standard"
                                 value={this.state.hotel.hotelAdminName}
                                 onChange={(e) => {
-                                    this.state.hotel.hotelAdminName = e.target.value;
+                                    //this.state.hotel.hotelAdminName = e.target.value;
+                                    let val = this.state.hotel;
+                                    val.hotelAdminName = e.target.value
+                                    this.setState({hotel:{...val}});
                                     this.validateAndSetHotel();
                                 }}
                                 onBlur={()=>{
@@ -200,7 +223,10 @@ class HotelAdd extends Component {
                                 variant="standard"
                                 value={this.state.hotel.hotelAdminMail}
                                 onChange={(e) => {
-                                    this.state.hotel.hotelAdminMail = e.target.value;
+                                    //this.state.hotel.hotelAdminMail = e.target.value;
+                                    let val = this.state.hotel;
+                                    val.hotelAdminMail = e.target.value
+                                    this.setState({hotel:{...val}});
                                     this.validateAndSetHotel();
                                 }}
                                 onBlur={()=>{
@@ -227,8 +253,12 @@ class HotelAdd extends Component {
                                 type={"number"}
                                 label="Mobile Country Code"
                                 variant="standard"
+                                value={this.state.hotel.mobileCountryCode}
                                 onChange={(e) => {
-                                    this.state.hotel.mobileCountryCode = parseInt(e.target.value);
+                                    //this.state.hotel.mobileCountryCode = parseInt(e.target.value);
+                                    let val = this.state.hotel;
+                                    val.mobileCountryCode = e.target.value
+                                    this.setState({hotel:{...val}});
                                     this.validateAndSetHotel();
                                 }}
                                 onBlur={()=>{
@@ -254,7 +284,10 @@ class HotelAdd extends Component {
                                 variant="standard"
                                 value={this.state.hotel.mobileNumber}
                                 onChange={(e) => {
-                                    this.state.hotel.mobileNumber = e.target.value;
+                                    //this.state.hotel.mobileNumber = e.target.value;
+                                    let val = this.state.hotel;
+                                    val.mobileNumber = e.target.value
+                                    this.setState({hotel:{...val}});
                                     this.validateAndSetHotel();
                                 }}
                                 onBlur={()=>{
@@ -280,7 +313,10 @@ class HotelAdd extends Component {
                                 variant="standard"
                                 value={this.state.hotel.address}
                                 onChange={(e) => {
-                                    this.state.hotel.address = e.target.value;
+                                    //this.state.hotel.address = e.target.value;
+                                    let val = this.state.hotel;
+                                    val.address = e.target.value
+                                    this.setState({hotel:{...val}});
                                     this.validateAndSetHotel();
                                 }}
                                 onBlur={()=>{
@@ -305,7 +341,7 @@ class HotelAdd extends Component {
                                 disabled={true}
                                 label="Valid Sectors"
                                 variant="standard"
-                                value={this.state.hotel.validSectors}
+                                value={"1,2,3,4,5,6,7,8,9,10"}
                                 onChange={(e) => {
                                     this.state.hotel.validSectors = e.target.value;
                                     this.validateAndSetHotel();

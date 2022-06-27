@@ -25,18 +25,16 @@ class ComboBox extends Component {
         let tempList = [];
         if (this.props.itemSource.length > 0) {
             tempList.push(...this.props.itemSource);
-        }
-        this.setState({dataList:tempList,selectedValue:tempList[0]})
         if(this.props.defaultValue){
-            let dt = this.state.dataList.find((v) => v === this.props.defaultValue)
-            if(dt){
-                this.setState({selectedValue:dt})
-            }
+            // eslint-disable-next-line no-unused-expressions
+         let tlst = this.props.itemSource.find((val) => val === this.props.defaultValue);
+         if(tlst && tlst.length>0) this.state.selectedValue = tlst[0];
         }
+        }
+        this.setState({dataList:tempList})
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        
         if(this.props.itemSource.length !== prevProps.itemSource.length){
             let tempList = [];
             if (this.props.itemSource.length > 0) {
@@ -45,10 +43,18 @@ class ComboBox extends Component {
             }
             this.setState({dataList:tempList,selectedValue:tempList[0]})
         }
+        if(this.props.defaultValue !== prevProps.defaultValue){
+            if(this.props.defaultValue){
+                // eslint-disable-next-line no-unused-expressions
+                let tlst = this.props.itemSource.filter((val) => val === this.props.defaultValue);
+                if(tlst && tlst.length>0){
+                    this.setState({selectedValue:tlst[0]})
+                }
+            }
+        }
     }
 
     render() {
-        
         return (
             <div>
                 <Autocomplete
@@ -60,10 +66,11 @@ class ComboBox extends Component {
                         <TextField {...params} label={this.state.label} variant="outlined" fullWidth={this.props.fullWidth}/>
                     )}
                     onChange={(e, value, reason) => {
+                        if(value){
                         this.setState({selectedValue: value})
-
-                        if (this.props.onSelectedItemChange && value) {
+                        if (this.props.onSelectedItemChange) {
                             this.props.onSelectedItemChange(value);
+                        }
                         }
                     }}
                     fullWidth
@@ -79,7 +86,8 @@ ComboBox.propTypes = {
     label: PropTypes.string.isRequired,
     onSelectedItemChange: PropTypes.func,
     itemSource: PropTypes.array.isRequired,
-    fullWidth: PropTypes.bool
+    fullWidth: PropTypes.bool,
+    defaultValue:PropTypes.object
 };
 
 export default ComboBox;

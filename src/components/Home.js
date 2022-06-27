@@ -155,6 +155,7 @@ class Home extends Component {
     }
 
     onUpdate =async (hotelContract) => {
+        console.log("update hotel:",hotelContract);
         debugger;
         var hotelModel = new HotelModel();
         hotelModel = {...hotelContract};
@@ -252,7 +253,7 @@ class Home extends Component {
                                 countryList={this.state.countryList} 
                                 setHotel={this.setHotel}
                                 isUpdate={this.state.isOpenDialogForUpdate}
-                                hotelModel={this.state.selectedHotel} />)}
+                                hotelModel={this.state.isOpenDialogForUpdate ? this.state.selectedHotel : undefined} />)}
                             handleClose={this.handleCloseDialog}
                             actions={(
                                 <Button autoFocus
