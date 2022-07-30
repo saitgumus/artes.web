@@ -5,7 +5,7 @@ const dateFormat = require("dateformat");
  * common types for general components
  */
 export class CommonTypes {
-  static URLaddress = "http://207.154.218.199:5010"; //23163 - api, 5001 - gateway
+  static URLaddress = "http://srv341.heyloki.com:5010"; //23163 - api, 5001 - gateway
   static KafkaHost = "http://167.172.180.44:9092";
   static KafkaTopic = "apmantest";
   static RabbitMQ = "http://167.172.180.44:5672";

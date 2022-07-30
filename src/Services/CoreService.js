@@ -2,7 +2,6 @@ import { CommonTypes } from "../Types/Common";
 import Cache from "./Cache";
 import { HttpClientServiceInstance } from "./HttpClient";
 import { Response, Severity } from "../Core/Response";
-import Country from "../Models/Country";
 
 /**
  * the parameter services

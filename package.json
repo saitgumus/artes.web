@@ -1,5 +1,5 @@
 {
-  "name": "apman",
+  "name": "artes",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -26,7 +26,7 @@
     "mui-datatables": "^3.6.0",
     "prop-types": "^15.6.2",
     "random-color-generator2": "^1.2.0",
-    "react": "^16.13.1",
+    "react": "^18.2.0",
     "react-alert": "^7.0.2",
     "react-alert-template-basic": "^1.0.0",
     "react-countdown-circle-timer": "^2.3.7",
