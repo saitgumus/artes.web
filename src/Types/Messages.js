@@ -27,6 +27,8 @@ export default class Messages {
     createDistributor: "Create distributor",
     /** otel ekle */
     createHotel: "Create Hotel",
+    /** cihaz ekle */
+    createDevice: "Create Device",
     /**kaydet */
     save: "Kaydet",
     /**giriş yap */

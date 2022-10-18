@@ -6,20 +6,21 @@ import {connect} from "react-redux";
 import {Card, Grid, Typography} from "@material-ui/core";
 import DataTable from "./ToolBox/DataTable";
 import DialogForm from "./ToolBox/dialog-form";
-import {GetCountryList} from "../Services/CoreService";
-import { ShowStatusError, ShowStatusSuccess} from "../Core/Helper";
-import Button from "@material-ui/core/Button";
-import {GetHotels, SaveHotel, UpdateHotel} from "../Services/HotelService";
+import {ShowStatusError, ShowStatusSuccess,} from "../Core/Helper";
 import LoadingOverlay from "react-loading-overlay"
+import {GetDevices, SaveDevice} from "../Services/DeviceService";
+import Button from "@material-ui/core/Button";
+import DeviceAdd from "./DeviceAdd";
+import {GetHotels, SaveHotel, UpdateHotel} from "../Services/HotelService";
 import HotelModel from "../Models/hotel/HotelModel";
-import HotelAdd from "./hotel-add";
+import DeviceModel from "../Models/device/DeviceModel";
 
 
 /***
  * ana sayfa
  */
-class Home extends Component {
-    static displayName = Home.name;
+class DeviceComponent extends Component {
+    static displayName = DeviceComponent.name;
 
     constructor(props) {
         super(props);
@@ -27,46 +28,34 @@ class Home extends Component {
         this.state = {
             isOpenDialogForm: false,
             isOpenDialogForUpdate:false,
-            hotel: {},
-            countryList: [],
+            device: {},
+            deviceList:[],
             hotelList:[],
             isLoading:true,
-            selectedHotel:{},
-            defaultCountry:{},
-            isAddedHotelValid:false
+            selectedDevice:{},
+            isAddedDeviceValid:false
         };
-
     }
 
     columns = [
         {
-            name: "hotelName",
-            label: "Hotel Name",
+            name:"brasscoDeviceId",
+            label:"Id",
+            options:{filter: true, sort: true}
+        },
+        {
+            name:"deviceTypeCd",
+            label:"Type",
+            options:{filter: true, sort: true}
+        },
+        {
+            name: "uniqueCode",
+            label: "Unique Code",
             options: {filter: true, sort: true},
         },
         {
-            name: "hotelAdminName",
-            label: "Admin Name",
-            options: {filter: true, sort: true},
-        },
-        {
-            name: "hotelAdminMail",
-            label: "Administrator",
-            options: {filter: true, sort: true},
-        },
-        {
-            name: "creationdate",
-            label: "Created At",
-            options: {filter: true, sort: true},
-        },
-        {
-            name: "validSectors",
-            label: "Valid Sectors",
-            options: {filter: true, sort: true},
-        },
-        {
-            name: "allowGeneralCard",
-            label: "Allow General Card",
+            name: "hotelId",
+            label: "Hotel Id",
             options: {filter: true, sort: true},
         }
     ];
@@ -74,7 +63,7 @@ class Home extends Component {
     componentDidMount() {
         if (this.props.actions.changeActiveResourceCode) {
             this.props.actions.changeActiveResourceCode(
-                CommonTypes.Resources.home.resourceCode
+                CommonTypes.Resources.device.resourceCode
             );
         }
 
@@ -86,8 +75,7 @@ class Home extends Component {
     }
 
     onLoad = async ()=>{
-        this.getCountries();
-        await Promise.all([this.getCountries,this.getList()])
+        await Promise.all([this.getList(),this.getHotels()])
         this.setState({
             isLoading:false
         });
@@ -97,13 +85,13 @@ class Home extends Component {
 
     onExecute = async (key) => {
         switch (key) {
-            ///create hotel
-            case CommonTypes.ActionKeys.CreateHotel:
+            ///create device
+            case CommonTypes.ActionKeys.CreateDevice:
                 this.setState({isOpenDialogForm: true,isOpenDialogForUpdate:false})
                 break;
             
             case CommonTypes.ActionKeys.Edit:
-                if(!this.state.selectedHotel.hotelId || this.state.selectedHotel.hotelId < 1){
+                if(!this.state.selectedDevice.brasscoDeviceId || this.state.selectedDevice.brasscoDeviceId < 1){
                     ShowStatusError("güncelleme yapmak için kayıt seçmeniz gerekmektedir.");
                     return;
                 }
@@ -118,72 +106,17 @@ class Home extends Component {
         }
     };
 
-
     dialogGridMdSize = 7;
-
-    getCountries = async () => {
-        await GetCountryList()
-            .then(
-                (data) => {
-                    if (data && data.length > 0) {
-                        this.setState({countryList: data})
-                    }
-                }
-            ).catch(e => {
-                console.error(e);
-                ShowStatusError("ülke listesi getirilemedi.");
-            })
-    }
-
-    onCreate =async (hotelContract) => {
-        debugger;
-        var hotelModel = new HotelModel();
-        hotelModel = {...hotelContract};
-        hotelModel.allowGeneralCard = false;
-        hotelModel.contactType = 1;
-
-       var response = await SaveHotel(hotelModel);
-        if(!response || !response.success){
-            ShowStatusError(response.getResultsStringFormat());
-            return;
-        }
-       if(response && response.success){
-           ShowStatusSuccess("kayıt başarılı");
-           await this.getList();
-       }
-
-    }
-
-    onUpdate =async (hotelContract) => {
-        console.log("update hotel:",hotelContract);
-        debugger;
-        var hotelModel = new HotelModel();
-        hotelModel = {...hotelContract};
-        hotelModel.allowGeneralCard = false;
-        hotelModel.contactType = 1;
-
-       var response = await UpdateHotel(hotelModel);
-        if(!response || !response.success){
-            ShowStatusError(response.getResultsStringFormat());
-            return;
-        }
-       if(response && response.success){
-           ShowStatusSuccess("güncellendi.");
-           await this.getList();
-       }
-
-    }
-
 
     async getList(){
         this.setState({isLoading:true})
-        GetHotels()
+        GetDevices()
             .then(response => {
              if(!response.success){
                  ShowStatusError(response.getResultsStringFormat());
              }
              if(response.value && response.value.length > 0){
-                 this.setState({hotelList:response.value,isLoading:false})
+                 this.setState({deviceList:response.value,isLoading:false})
              }
             })
             .catch(
@@ -192,6 +125,59 @@ class Home extends Component {
                     this.setState({isLoading:false})
                 }
             )
+    }
+    getHotels = async () => {
+        await GetHotels()
+            .then(
+                (response) => {
+                    if (response.value && response.value.length > 0) {
+                        const hotels = response.value.map(
+                            (item) => {
+                                return {
+                                    name: item.hotelName,
+                                    value: item.hotelId
+                                };
+                            }
+                        )
+                        this.setState({hotelList: hotels})
+                    }
+                }
+            ).catch(e => {
+                console.error(e);
+                ShowStatusError("hotel listesi getirilemedi.");
+            })
+    }
+    onCreate =async (deviceContract) => {
+        let deviceModel = new DeviceModel();
+        deviceModel = {...deviceContract};
+
+        var response = await SaveDevice(deviceModel);
+        if(!response || !response.success){
+            ShowStatusError(response.getResultsStringFormat());
+            return;
+        }
+        if(response && response.success){
+            ShowStatusSuccess("kayıt başarılı");
+            await this.getList();
+        }
+    }
+
+    onUpdate =async (deviceContract) => {
+        alert('this method is not ready');
+        return;
+        console.log("update device:",deviceContract);
+        var deviceModel = new DeviceModel();
+        deviceModel = {...deviceContract};
+
+        var response = await UpdateHotel(deviceModel);
+        if(!response || !response.success){
+            ShowStatusError(response.getResultsStringFormat());
+            return;
+        }
+        if(response && response.success){
+            ShowStatusSuccess("güncellendi.");
+            await this.getList();
+        }
     }
 
     handleCloseDialog = () => {
@@ -202,13 +188,13 @@ class Home extends Component {
     };
 
     validateCreateModel = () => {
-        return this.state.isAddedHotelValid;
+        return this.state.isAddedDeviceValid;
     }
 
-    setHotel = (hotel)=>{
+    setDevice = (device)=>{
         this.setState({
-            hotel:hotel,
-            isAddedHotelValid:true
+            device:device,
+            isAddedDeviceValid:true
         });
     }
 
@@ -222,55 +208,55 @@ class Home extends Component {
 
                     <Grid item>
                         <Typography variant='h4'>
-                            Hotel
+                            Device
                         </Typography>
                     </Grid>
                     <Grid item>
                         <Card elevation={1}>
                             <DataTable
                                 columns={this.columns}
-                                data={this.state.hotelList}
+                                data={this.state.deviceList}
                                 onSelectedItemChange={(
                                     currentRowIndex,
                                     allRowsIndexes,
                                     rowsSelectedIndex
                                 ) => {
-                                 
-                                    if(this.state.hotelList && this.state.hotelList.length > 0 && rowsSelectedIndex){
-                                        var selectedData = this.state.hotelList[rowsSelectedIndex];
-                                        this.state.selectedHotel = selectedData
+                                    if(this.state.deviceList && this.state.deviceList.length > 0 && rowsSelectedIndex){
+                                        var selectedData = this.state.deviceList[rowsSelectedIndex];
+                                        // eslint-disable-next-line react/no-direct-mutation-state
+                                        this.state.selectedDevice = selectedData
                                     }
                                 }
                                 }
                             />
                         </Card>
                     </Grid>
-                    {this.state.isOpenDialogForm ? (
+                   {this.state.isOpenDialogForm ? (
                         <DialogForm
                             count={this.state.renderCount}
-                            title={"Create Hotel"}
-                            content={(<HotelAdd 
-                                countryList={this.state.countryList} 
-                                setHotel={this.setHotel}
+                            title={"Create Device"}
+                            content={(<DeviceAdd
+                                hotelList={this.state.hotelList}
+                                setDevice={this.setDevice}
                                 isUpdate={this.state.isOpenDialogForUpdate}
-                                hotelModel={this.state.isOpenDialogForUpdate ? this.state.selectedHotel : undefined} />)}
+                                deviceModel={this.state.isOpenDialogForUpdate ? this.state.selectedDevice : undefined} />)}
                             handleClose={this.handleCloseDialog}
                             actions={(
                                 <Button autoFocus
-                                        disabled={!this.state.isAddedHotelValid}
+                                        disabled={!this.state.isAddedDeviceValid}
                                         onClick={()=>{
                                     if(!this.validateCreateModel()){
                                         return;
                                     }
                                     this.handleCloseDialog()
                                     if(this.state.isOpenDialogForUpdate){
-                                        this.onUpdate(this.state.hotel)
+                                        this.onUpdate(this.state.device)
                                     }
                                     else{
-                                        this.onCreate(this.state.hotel)
+                                        this.onCreate(this.state.device)
                                     }
                                 }} color="primary">
-                                    Gönder
+                                    Kaydet
                                 </Button>
                             )}
                         />
@@ -298,4 +284,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(DeviceComponent);

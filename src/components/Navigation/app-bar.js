@@ -8,13 +8,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import Badge from "@material-ui/core/Badge";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import List from "@material-ui/core/List";
@@ -25,9 +19,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as pageActions from "../../redux/actions/page-actions";
@@ -188,101 +180,13 @@ function AppBarMenu(props) {
   const handleDrawerClose = () => {
     setOpenMenu(false);
   };
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
   //#region handles
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
 
   //#endregion
 
   //#region renders
 
-  const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem component={Link} to="/user/profile">
-        {" "}
-        Profil{" "}
-      </MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem component={Link} to="/user/inbox">
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
-
   //#endregion
-
-  //bildirim kontrolü -- loop hatasından dolayı commentlendi geri açılacak (sınavlardan sonra :) )
-  // if(props.userContract && props.userContract.token && props.userContract.token.length>1){
-  //     if(props.userContract.inboxNotificationCount > 0)
-  //         setInboxNotifCount(props.userContract.inboxNotificationCount);
-  //     if(props.userContract.generalNotificationCount > 0)
-  //         setGeneralNotifCount(props.userContract.generalNotificationCount);
-  //
-  // }
 
   return (
     <div className={classes.root}>
@@ -333,53 +237,16 @@ function AppBarMenu(props) {
             <List>
               <ListItem button component={Link} to={"/"}>
                 <ListItemIcon>{GetIcon("home")}</ListItemIcon>
-                <ListItemText primary={"Ana Sayfa"} />
+                <ListItemText primary={"Home"} />
               </ListItem>
-              <ListItem button component={Link} to={"/distributor"}>
-                <ListItemIcon>{GetIcon(CommonTypes.Iconkeys.profile)}</ListItemIcon>
-                <ListItemText primary={"Distributors"} />
+              <ListItem button component={Link} to={"/device"}>
+              <ListItemIcon>{GetIcon(CommonTypes.Iconkeys.paydue)}</ListItemIcon>
+                <ListItemText primary={"Device"} />
               </ListItem>
             </List>
           </AccordionDetails>
         </Accordion>
-        {cacheResources && cacheResources.length > 0 ? (
-          cacheResources.map((val, ind) => {
-            return (
-              <Accordion key={"accordion" + ind}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography style={{ fontSize: 15, fontWeight: "bold" }}>
-                    {val.parentName}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <List>
-                    {val.resources.map((sval, sind) => {
-                      return (
-                        <ListItem
-                          button
-                          key={sval.resourceCode}
-                          component={Link}
-                          to={sval.path}
-                        >
-                          <ListItemIcon>{GetIcon(sval.iconKey)}</ListItemIcon>
-                          <ListItemText primary={sval.name} />
-                        </ListItem>
-                      );
-                    })}
-                  </List>
-                </AccordionDetails>
-              </Accordion>
-            );
-          })
-        ) : (
-          <p />
-        )}
       </Drawer>
-
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: openMenu,

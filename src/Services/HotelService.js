@@ -76,3 +76,24 @@ export async function UpdateHotel(model) {
 
     return returnObject;
 }
+
+export async function DeleteHotel(model) {
+    let returnObject = new Response();
+    let url = CommonTypes.GetUrlForAPI("hotels","delete-hotel");
+
+    await HttpClientServiceInstance.put(url,model)
+    .then( res => {
+        if(res.data && res.data.success){
+            returnObject.value = true;
+        }
+        else{
+            returnObject.addResult(res.data && res.data.errorMessage, Severity.High,"UPDATEHOTEL");
+        }
+    })
+    .catch(err => {
+        console.log(err);
+        returnObject.addResult("güncelleme işlemi başarısız oldu.");
+    })
+
+    return returnObject;
+}

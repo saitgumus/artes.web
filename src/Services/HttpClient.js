@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Alert } from "reactstrap";
 import { CommonTypes } from "../Types/Common";
 
 class HttpClientService {
@@ -38,9 +39,9 @@ class HttpClientService {
       })
       .catch((resp) => {
         if (resp.response !== undefined && resp.response.status === 401) {
-          console.log("unauthorized!!");
+          alert("unauthorized!!");
           localStorage.removeItem("user");
-          window.location.replace(CommonTypes.URLaddress);
+          window.location.replace(CommonTypes.WebURLaddress);
         }
         return Promise.reject(resp);
       });
@@ -54,9 +55,9 @@ class HttpClientService {
     })
     .catch( resp => {
       if (resp.response !== undefined && resp.response.status === 401) {
-        console.log("unauthorized!!");
+        alert("unauthorized!!");
         localStorage.removeItem("user");
-        window.location.replace(CommonTypes.URLaddress);
+        window.location.replace(CommonTypes.WebURLaddress);
       }
       return Promise.reject(resp);
     })

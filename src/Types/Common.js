@@ -5,7 +5,8 @@ const dateFormat = require("dateformat");
  * common types for general components
  */
 export class CommonTypes {
-  static URLaddress = "http://srv341.heyloki.com:5010"; //23163 - api, 5001 - gateway
+  static URLaddress = "https://srv341.heyloki.com:5011"; //23163 - api, 5001gateway
+  static WebURLaddress = "http://srv341.heyloki.com:8000";
   static KafkaHost = "http://167.172.180.44:9092";
   static KafkaTopic = "apmantest";
   static RabbitMQ = "http://167.172.180.44:5672";
@@ -84,6 +85,8 @@ export class CommonTypes {
     CreateDistributor:"CREATEDIST",
     /** create a hotel */
     CreateHotel:"CREATEHOTEL",
+    /** create a device */
+    CreateDevice:"CREATEDEVICE",
     /**
      * kaydet
      */
@@ -160,6 +163,17 @@ export class CommonTypes {
         CommonTypes.ActionKeys.Edit
       ],
     },
+    /**
+     * device
+     */
+         device: {
+          resourceCode: "DEVICE",
+          actionKeys: [
+            CommonTypes.ActionKeys.CreateDevice,
+            CommonTypes.ActionKeys.Refresh,
+            CommonTypes.ActionKeys.Edit
+          ],
+        },
    
   };
 
@@ -219,7 +233,9 @@ export function getActionLabel(key) {
     case CommonTypes.ActionKeys.Read:
       return Messages.ActionNames.read;
     case CommonTypes.ActionKeys.Refresh:
-      return Messages.ActionNames.refresh;  
+      return Messages.ActionNames.refresh;
+      case CommonTypes.ActionKeys.CreateDevice:
+        return Messages.ActionNames.createDevice;  
 
     default:
       return "action";

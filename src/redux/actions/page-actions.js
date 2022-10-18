@@ -18,87 +18,9 @@ export function changeActiveResourceCode(resourceCode) {
     case CommonTypes.Resources.distributor.resourceCode:
       actionKeys.push.apply(actionKeys, CommonTypes.Resources.distributor.actionKeys);
       break;
-    //apartman tanımlama
-    case CommonTypes.Resources.defineSiteApartment.resourceCode:
-      actionKeys.push.apply(actionKeys, [CommonTypes.ActionKeys.Save]);
-      break;
-    //üye ekle
-    case CommonTypes.Resources.defineMember.resourceCode:
-      actionKeys.push.apply(
-        actionKeys,
-        CommonTypes.Resources.defineMember.actionKeys
-      );
-      break;
-    //üye listele
-    case CommonTypes.Resources.memberList.resourceCode:
-      actionKeys.push.apply(
-        actionKeys,
-        CommonTypes.Resources.memberList.actionKeys
-      );
-      break;
-    // gelen kutusu
-    case CommonTypes.Resources.userInbox.resourceCode:
-      actionKeys.push.apply(
-        actionKeys,
-        CommonTypes.Resources.userInbox.actionKeys
-      );
-      break;
-    // anket tanımlama
-    case CommonTypes.Resources.VoteDefine.resourceCode:
-      actionKeys.push.apply(
-        actionKeys,
-        CommonTypes.Resources.VoteDefine.actionKeys
-      );
-      break;
-    // anket işlemler ve sonuçlar
-    case CommonTypes.Resources.VotingAndResult.resourceCode:
-      actionKeys.push.apply(
-        actionKeys,
-        CommonTypes.Resources.VotingAndResult.actionKeys
-      );
-      break;
-    // masraf giriş
-    case CommonTypes.Resources.ExpenseEntry.resourceCode:
-      actionKeys.push.apply(
-        actionKeys,
-        CommonTypes.Resources.ExpenseEntry.actionKeys
-      );
-      break;
-    // masraf listele
-    case CommonTypes.Resources.ExpenseList.resourceCode:
-      actionKeys.push.apply(
-        actionKeys,
-        CommonTypes.Resources.ExpenseList.actionKeys
-      );
-      break;
-    // ihale kaydı
-    case CommonTypes.Resources.TenderDefining.resourceCode:
-      actionKeys.push.apply(
-        actionKeys,
-        CommonTypes.Resources.TenderDefining.actionKeys
-      );
-      break;
-      // ihale listeleme
-    case CommonTypes.Resources.TenderListing.resourceCode:
-      actionKeys.push.apply(
-        actionKeys,
-        CommonTypes.Resources.TenderListing.actionKeys
-      );
-      break;
-      // aidat ödeme
-    case CommonTypes.Resources.DuesPayment.resourceCode:
-      actionKeys.push.apply(
-        actionKeys,
-        CommonTypes.Resources.DuesPayment.actionKeys
-      );
-      break;
-      // aidat listeleme
-    case CommonTypes.Resources.DuesListing.resourceCode:
-      actionKeys.push.apply(
-          actionKeys,
-          CommonTypes.Resources.DuesListing.actionKeys
-      );
-      break;
+      case CommonTypes.Resources.device.resourceCode:
+        actionKeys.push.apply(actionKeys, CommonTypes.Resources.device.actionKeys);
+        break;
     default:
       break;
   }
