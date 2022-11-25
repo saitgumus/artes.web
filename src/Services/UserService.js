@@ -1,8 +1,6 @@
 import { CommonTypes } from "../Types/Common";
 import { HttpClientServiceInstance } from "./HttpClient";
-import Cache from "./Cache";
 import { Response, Severity } from "../Core/Response";
-import { InboxmessageContract } from "../Models/InboxMessageContract";
 import User from "../Models/User";
 
 /**
@@ -15,8 +13,6 @@ export async function LoginUser(userContract) {
   let response = new Response();
   let contract = userContract;
   let url = CommonTypes.GetUrlForAPI("auth", "login");
-
-  Cache.setItem("lastloginrequestuser", contract);
 
   await HttpClientServiceInstance.post(url, contract)
     .then((res) => {
@@ -46,43 +42,6 @@ export async function LoginUser(userContract) {
           }else {
             response.addResult("Token bilgisi alınamadı.",Severity.High);
           }
-
-          /*
-          let userData = res.data.value.userDefinitionContract;
-
-          let user = new User();
-          user.userId = userData.userId;
-          user.email = userData.email;
-          user.firstName = userData.firstName;
-          user.lastName = userData.lastName;
-          user.userName = userData.userName;
-
-          if (res.data.value.companyContract) {
-            user.isCorporateUser = true;
-            user.company = { ...res.data.value.companyContract };
-          }
-
-          if (res.data.value.apartmentContract) {
-            user.apartment = res.data.value.apartmentContract;
-          }
-          user.token = res.data.value.accessToken.token;
-          user.expiration = res.data.value.accessToken.expiration;
-          HttpClientServiceInstance.setTokenOnLogin(user.token);
-
-          user.inboxNotificationCount = userData.inboxNotificationCount;
-          user.generalNotificationCount = 0; //doldurulacak - sunucu tarafı null
-
-          //resources
-          user.resourceActionList = res.data.value.resourceActions;
-
-          localStorage.setItem("user", JSON.stringify(user));
-          HttpClientServiceInstance.setTokenOnLogin(user.token);
-
-          response.value = user;
-          SetUserResources(user.resourceActionList);
-
-           */
-
         }
       } else {
         response.addCoreResults(res.data.results);
@@ -146,170 +105,109 @@ export async function SetNewPassword(password, email) {
       return ro;
     });
 }
+
 /**
- * gelen kutusu bilgilerini getirir.
- * @param inboxmessageContract
- * @returns {Promise<Response>}
- * @constructor
+ * add a new artes user
+ * @param {UserModel} userContract 
+ * @returns 
  */
-export async function GetUserInboxList(inboxmessageContract) {
+export async function AddUser(userContract) {
   let response = new Response();
-  let inboxContract = new InboxmessageContract();
-  inboxContract = inboxmessageContract;
+  let contract = userContract;
+  let url = CommonTypes.GetUrlForAPI("users", "add");
 
-  if (inboxContract.receiverUserId > 0) {
-    await HttpClientServiceInstance.post(
-      CommonTypes.GetUrlForAPI("user", "getusermessages"),
-      inboxContract
-    )
-      .then((res) => {
-        response.value = res.data;
-        console.log("inbox data:", response.value);
-      })
-      .catch((err) => {
-        response.addResult("mesajlar getirilemedi.", Severity.High, "server");
-      });
-  } else {
-    response.addResult(
-      "üye id bilgisi alınamadı",
-      Severity.Low,
-      "null parameter"
-    );
-  }
-
-  return response;
-}
-
-/**
- *
- * @returns {Promise<void>}
- * @param inboxId
- */
-export async function updateMessageStatusForReaded(inboxId) {
-  let response = new Response();
-  let inboxContract = new InboxmessageContract();
-  inboxContract.inboxId = inboxId;
-
-  if (inboxContract.inboxId > 0) {
-    await HttpClientServiceInstance.post(
-      CommonTypes.GetUrlForAPI("user", "updatemessagestatus"),
-      inboxContract
-    )
-      .then((res) => {
-        response.value = res.data;
-        console.log("message status updated");
-      })
-      .catch((err) => {
-        response.addResult("mesajlar getirilemedi.", Severity.High, "server");
-      });
-  } else {
-    response.addResult(
-      "mesaj id bilgisi alınamadı",
-      Severity.Low,
-      "null parameter"
-    );
-  }
-
-  return response;
-}
-
-/**
- * kaynak-aksiyon normalizasyonu yapılır.
- * @param {array} resourceActions
- */
-function SetUserResources(resourceActions) {
-  if (resourceActions && resourceActions.length > 0) {
-    // var s = {
-    //     parentCode:'',
-    //     parentName:'',
-    //     resources=[{
-    //         resourceCode:'',
-    //         resourceName:'',
-    //         Actions:[{
-    //
-    //         }]
-    //     }]
-    // }
-    let resourceList = [];
-
-    for (let item of resourceActions) {
-      //parent yoksa eklenir.
-      if (!resourceList.find((x) => x.parentCode === item.parentCode)) {
-        let tmpRes = {};
-        tmpRes.parentCode = item.parentCode;
-        tmpRes.parentName = item.parentName;
-        tmpRes.resources = [];
-        tmpRes.resources.Actions = [];
-        resourceList.push(tmpRes);
-      }
-
-      let ind = resourceList.findIndex((r) => r.parentCode === item.parentCode);
-      // let tmpR = resourceList[ind].Resources.find(val => val.resourceCode === item.resourceCode);
-
-      //ekran eklenmemişse eklenir.
-      if (
-        !resourceList[ind].resources.find(
-          (val) => val.resourceCode === item.resourceCode
-        )
-      ) {
-        let resourceSub = {
-          resourceCode: item.resourceCode,
-          name: item.name,
-          iconKey: item.iconKey,
-          path: item.path,
-          actions: [],
-        };
-        resourceList[ind].resources.push(resourceSub);
-      }
-
-      //aksiyon eklenmemişse eklenir
-      if (
-        resourceList[ind].resources.find(
-          (val) => val.resourceCode === item.resourceCode
-        ) &&
-        !resourceList[ind].resources
-          .find((val) => val.resourceCode === item.resourceCode)
-          .actions.find((r) => r.actionKey === item.actionKey)
-      ) {
-        let act = {
-          actionName: item.actionName,
-          actionKey: item.actionKey,
-        };
-        resourceList[ind].resources
-          .find((val) => val.resourceCode === item.resourceCode)
-          .actions.push(act);
-      }
-    }
-    Cache.overrideItem("resources", resourceList);
-  }
-}
-/**
- * kurum kullanıcı kaydı
- * @param {Company} companyContract
- */
-export async function RegisterCompany(companyContract) {
-  let ro = new Response();
-
-  return await HttpClientServiceInstance.post(
-    CommonTypes.GetUrlForAPI("user", "savecompany"),
-    companyContract
-  )
+  await HttpClientServiceInstance.post(url, contract)
     .then((res) => {
-      if (!res && !res.data) {
-        ro.addResult("Kullanıcı oluşturulamadı.");
-        return ro;
+      if (res.data.success) {
+        response.value = res.data;
       } else {
-        if (res.data && res.data.success) {
-          ro.value = res.data.value;
-          return ro;
-        } else {
-          ro.addCoreResults(res.data.results);
-          return ro;
-        }
+        response.addCoreResults(res.data.results);
       }
     })
-    .catch((err) => {
-      ro.addResult("İşlem gerçekleştirilemedi.");
-      return ro;
+    .catch((e) => {
+      response.addResult(e.message, Severity.High, "user-add");
     });
+
+  return response;
+
 }
+
+/**
+ * update user
+ * @param {UserModel} userContract 
+ * @returns 
+ */
+export async function UpdateUser(userContract) {
+  let response = new Response();
+  let contract = userContract;
+  let url = CommonTypes.GetUrlForAPI("users", "update");
+
+  await HttpClientServiceInstance.post(url, contract)
+    .then((res) => {
+      if (res.data.success) {
+        response.value = res.data;
+      } else {
+        response.addCoreResults(res.data.results);
+      }
+    })
+    .catch((e) => {
+      response.addResult(e.message, Severity.High, "user-update");
+    });
+
+  return response;
+
+}
+
+/**
+ * delete user
+ * @param {UserModel} userContract 
+ * @returns 
+ */
+ export async function DeleteUser(userContract) {
+  let response = new Response();
+  let contract = userContract;
+  let url = CommonTypes.GetUrlForAPI("users", "");
+
+  await HttpClientServiceInstance.delete(url, contract)
+    .then((res) => {
+      if (res.data.success) {
+        response.value = res.data;
+      } else {
+        response.addCoreResults(res.data.results);
+      }
+    })
+    .catch((e) => {
+      response.addResult(e.message, Severity.High, "user-update");
+    });
+
+  return response;
+
+}
+
+/**
+ * get artes users
+ * @returns Users
+ */
+export async function GetUsers() {
+  let returnObject = new Response();
+  
+  let url = CommonTypes.GetUrlForAPI("users","getall");
+
+  await HttpClientServiceInstance.get(
+      url
+  ).then( res => {
+    
+      if(res.data && res.data.success){
+          returnObject.value = res.data.data;
+      }
+      else{
+          returnObject.addResult(res.data && res.data.errorMessage,Severity.High,"GETUSERS");
+      }
+  })
+  .catch(err => {
+      returnObject.addResult("user listesi getirilemedi.");
+  });
+
+  return returnObject;
+}
+

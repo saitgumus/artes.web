@@ -13,4 +13,7 @@ export default class HotelModel {
     mobileNumber
     contactType=1; //email 2-telefon
     address
+    accessCard=true
+    accessEkey=true
+    accessPasscode=true
 }

@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Avatar, Card, CardContent, CardHeader, Grid, TextField} from "@material-ui/core";
-import {GetIntValue, IsNullOrEmpty, IsNullOrEmptyAll} from "../Core/Helper";
+import { IsNullOrEmptyAll} from "../Core/Helper";
 import ComboBox from "./ToolBox/combo-box";
 import PropTypes from "prop-types";
-import HotelModel from "../Models/hotel/HotelModel";
 
 function mapStateToProps(state) {
     return {};

@@ -21,6 +21,9 @@ export function changeActiveResourceCode(resourceCode) {
       case CommonTypes.Resources.device.resourceCode:
         actionKeys.push.apply(actionKeys, CommonTypes.Resources.device.actionKeys);
         break;
+        case CommonTypes.Resources.user.resourceCode:
+          actionKeys.push.apply(actionKeys, CommonTypes.Resources.user.actionKeys);
+          break;
     default:
       break;
   }

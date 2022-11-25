@@ -25,6 +25,12 @@ export default class Messages {
     refresh:"Refresh",
     /** distributor kaydet */
     createDistributor: "Create distributor",
+    /** create user */
+    createUser: "Create User",
+    /** update user */
+    updateUser: "Update User",
+    /** delete user */
+    deleteUser: "Delete User",
     /** otel ekle */
     createHotel: "Create Hotel",
     /** cihaz ekle */
@@ -44,7 +50,9 @@ export default class Messages {
     /* İncele */
     examine:"İncele",
     /* Oku */
-    read:"Oku"
+    read:"Oku",
+    /* sil */
+    delete:"Sil",
   };
 
   static LabelNames = {

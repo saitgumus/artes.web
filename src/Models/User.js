@@ -8,22 +8,10 @@ export default class User {
   MemberId;
   token;
   expiration;
-  //kullanıcı apartman bilgisi
-  apartment;
-  //üyelik paketi
-  subscription;
-  //bildirim
-  inboxNotificationCount;
-  generalNotificationCount;
-  //kaynak
-  resourceActionList;
-
-  //parola değişikliği gerekiyor!
-  shouldNewPassword;
-
-  // kurumsal
-  isCorporateUser;
-  company;
+  fullName;
+  status = true;
+  userType=2;
+  hotelId=1;
 }
 
 export class Subscription {

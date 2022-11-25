@@ -25,22 +25,6 @@ export class CommonTypes {
       actionName.trim()
     );
   }
-  static GetUrlForAccount(controllerName, actionName) {
-    return this.URLaddress.concat(
-      "/accounting/",
-      controllerName.trim(),
-      "/",
-      actionName.trim()
-    );
-  }
-  static GetUrlForPurchasing(controllerName, actionName) {
-    return this.URLaddress.concat(
-      "/purchasing/",
-      controllerName.trim(),
-      "/",
-      actionName.trim()
-    );
-  }
 
   static MessageTypes = {
     success: "success",
@@ -85,8 +69,16 @@ export class CommonTypes {
     CreateDistributor:"CREATEDIST",
     /** create a hotel */
     CreateHotel:"CREATEHOTEL",
+    /** create user */
+    CreateUser:"CREATEUSER",
+    /** delete user */
+    DeleteUser:"DELETEUSER",
+    /** update user */
+    UpdateUser:"UPDATEUSER",
     /** create a device */
     CreateDevice:"CREATEDEVICE",
+    /** delete device */
+    DeleteDevice:"DELETEDEVICE",
     /**
      * kaydet
      */
@@ -171,9 +163,21 @@ export class CommonTypes {
           actionKeys: [
             CommonTypes.ActionKeys.CreateDevice,
             CommonTypes.ActionKeys.Refresh,
-            CommonTypes.ActionKeys.Edit
+            CommonTypes.ActionKeys.DeleteDevice
           ],
         },
+        /**
+         * user
+         */
+        user:{
+          resourceCode:"USER",
+          actionKeys:[
+            CommonTypes.ActionKeys.Refresh,
+            CommonTypes.ActionKeys.CreateUser,
+            CommonTypes.ActionKeys.UpdateUser,
+            // CommonTypes.ActionKeys.DeleteUser,
+          ]
+        }
    
   };
 
@@ -234,9 +238,17 @@ export function getActionLabel(key) {
       return Messages.ActionNames.read;
     case CommonTypes.ActionKeys.Refresh:
       return Messages.ActionNames.refresh;
-      case CommonTypes.ActionKeys.CreateDevice:
-        return Messages.ActionNames.createDevice;  
-
+    case CommonTypes.ActionKeys.CreateDevice:
+      return Messages.ActionNames.createDevice;  
+    case CommonTypes.ActionKeys.DeleteDevice:
+      return Messages.ActionNames.delete;  
+      case CommonTypes.ActionKeys.CreateUser:
+        return Messages.ActionNames.createUser;  
+      case CommonTypes.ActionKeys.UpdateUser:
+        return Messages.ActionNames.updateUser;  
+      case CommonTypes.ActionKeys.DeleteUser:
+        return Messages.ActionNames.delete;  
+  
     default:
       return "action";
   }

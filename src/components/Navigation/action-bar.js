@@ -13,14 +13,27 @@ import FindInPageOutlinedIcon from "@material-ui/icons/FindInPageOutlined"; // i
 import PostAddRoundedIcon from "@material-ui/icons/PostAddRounded"; // sözleşme ekle
 import AttachFileRoundedIcon from "@material-ui/icons/AttachFileRounded"; // döküman
 import RefreshRoundedIcon from '@material-ui/icons/RefreshRounded'; // yenile
+import DeleteOutlineRounded from '@material-ui/icons/DeleteOutlineRounded'; // yenile
 
 class ActionBar extends Component {
   getIcon = (key) => {
     switch (key) {
       case CommonTypes.ActionKeys.CreateDistributor:
         return <SaveIcon/>
-        case CommonTypes.ActionKeys.CreateHotel:
+      case CommonTypes.ActionKeys.CreateHotel:
         return <SaveIcon/>
+      case CommonTypes.ActionKeys.CreateDevice:
+        return <SaveIcon/>  
+        case CommonTypes.ActionKeys.DeleteDevice:
+        return <DeleteOutlineRounded/>  
+        
+      case CommonTypes.ActionKeys.CreateUser:
+        return <SaveIcon/>  
+      case CommonTypes.ActionKeys.UpdateUser:
+        return <CreateIcon/>  
+      case CommonTypes.ActionKeys.DeleteUser:
+        return <DeleteOutlineRounded/>  
+
       case CommonTypes.ActionKeys.Save:
         return <SaveIcon />;
       case CommonTypes.ActionKeys.GetList:

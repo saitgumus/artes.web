@@ -57,3 +57,31 @@ export async function SaveDevice(deviceModel) {
 
     return returnObject;
 }
+
+/**
+ * delete the device
+ * @param {DeviceModel} deviceModel
+ * @returns 
+ */
+export async function DeleteDevice(deviceModel) {
+    let returnObject = new Response();
+
+    let url = CommonTypes.GetUrlForAPI("brasscodevices","delete");
+
+    await HttpClientServiceInstance.post(
+        url,
+        deviceModel
+    ).then( res => {
+        if(res.data && res.data.success){
+            returnObject.value = true;
+        }
+        else{
+            returnObject.addResult(res.data && res.data.errorMessage,Severity.High,"DELETEDEVICES");
+        }
+    })
+        .catch(err => {
+            returnObject.addResult("silme işlemi yapılamadı.");
+        });
+
+    return returnObject;
+}

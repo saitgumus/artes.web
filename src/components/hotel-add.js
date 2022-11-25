@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Avatar, Card, CardContent, CardHeader, Grid, TextField} from "@material-ui/core";
-import {GetIntValue, IsNullOrEmpty, IsNullOrEmptyAll, ShowStatusError} from "../Core/Helper";
+import {Avatar, Card, CardContent, CardHeader, Checkbox, FormControlLabel, Grid, TextField} from "@material-ui/core";
+import {GetIntValue, IsNullOrEmpty, IsNullOrEmptyAll} from "../Core/Helper";
 import ComboBox from "./ToolBox/combo-box";
 import PropTypes from "prop-types";
 
@@ -358,6 +358,30 @@ class HotelAdd extends Component {
                                     this.setState({validation:validObj})
                                 }}
                             />
+                        </Grid>
+                        <Grid item md={this.dialogGridMdSize}>
+                        <FormControlLabel control={<Checkbox
+                            defaultChecked
+                            onChange={(event,checked)=>{
+                                this.state.hotel.accessCard = checked;
+                            }}
+                            />} label="Kart Erişimi" />
+                        </Grid>
+                        <Grid item md={this.dialogGridMdSize}>
+                        <FormControlLabel control={<Checkbox
+                            defaultChecked
+                            onChange={(event,checked)=>{
+                                this.state.hotel.accessEKey = checked;
+                            }}
+                            />} label="Kilit Erişimi" />
+                        </Grid>
+                        <Grid item md={this.dialogGridMdSize}>
+                        <FormControlLabel control={<Checkbox
+                            defaultChecked
+                            onChange={(event,checked)=>{
+                                this.state.hotel.accessPasscode = checked;
+                            }}
+                            />} label="Parola Erişimi" />
                         </Grid>
                     </Grid>
                 </CardContent>

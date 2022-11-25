@@ -8,11 +8,10 @@ import DataTable from "./ToolBox/DataTable";
 import DialogForm from "./ToolBox/dialog-form";
 import {ShowStatusError, ShowStatusSuccess,} from "../Core/Helper";
 import LoadingOverlay from "react-loading-overlay"
-import {GetDevices, SaveDevice} from "../Services/DeviceService";
+import {DeleteDevice, GetDevices, SaveDevice} from "../Services/DeviceService";
 import Button from "@material-ui/core/Button";
 import DeviceAdd from "./DeviceAdd";
-import {GetHotels, SaveHotel, UpdateHotel} from "../Services/HotelService";
-import HotelModel from "../Models/hotel/HotelModel";
+import {GetHotels,} from "../Services/HotelService";
 import DeviceModel from "../Models/device/DeviceModel";
 
 
@@ -90,9 +89,9 @@ class DeviceComponent extends Component {
                 this.setState({isOpenDialogForm: true,isOpenDialogForUpdate:false})
                 break;
             
-            case CommonTypes.ActionKeys.Edit:
+            case CommonTypes.ActionKeys.DeleteDevice:
                 if(!this.state.selectedDevice.brasscoDeviceId || this.state.selectedDevice.brasscoDeviceId < 1){
-                    ShowStatusError("güncelleme yapmak için kayıt seçmeniz gerekmektedir.");
+                    ShowStatusError("işlem yapmak için kayıt seçmeniz gerekmektedir.");
                     return;
                 }
                     this.setState({isOpenDialogForm: true,isOpenDialogForUpdate:true})
@@ -162,20 +161,21 @@ class DeviceComponent extends Component {
         }
     }
 
-    onUpdate =async (deviceContract) => {
-        alert('this method is not ready');
-        return;
-        console.log("update device:",deviceContract);
+    onDelete =async (deviceContract) => {
+        if(!deviceContract || !deviceContract.brasscoDeviceId){
+            alert('device id bilgisi dolu olmalıdır!');
+            return;
+        }
         var deviceModel = new DeviceModel();
         deviceModel = {...deviceContract};
 
-        var response = await UpdateHotel(deviceModel);
+        var response = await DeleteDevice(deviceModel);
         if(!response || !response.success){
             ShowStatusError(response.getResultsStringFormat());
             return;
         }
         if(response && response.success){
-            ShowStatusSuccess("güncellendi.");
+            ShowStatusSuccess("silindi.");
             await this.getList();
         }
     }
