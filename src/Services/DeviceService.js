@@ -43,7 +43,6 @@ export async function SaveDevice(deviceModel) {
         url,
         deviceModel
     ).then( res => {
-        debugger;
         if(res.data && res.data.success){
             returnObject.value = true;
         }

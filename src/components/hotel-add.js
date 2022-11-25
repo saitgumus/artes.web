@@ -361,25 +361,37 @@ class HotelAdd extends Component {
                         </Grid>
                         <Grid item md={this.dialogGridMdSize}>
                         <FormControlLabel control={<Checkbox
-                            defaultChecked
+                            checked={this.state.hotel.accessCard}
                             onChange={(event,checked)=>{
-                                this.state.hotel.accessCard = checked;
+                                if(checked === this.state.hotel.accessCard) return;
+                                this.setState({
+                                    user:{...this.state.user,accessCard:checked}
+                                })
+                                this.validateAndSetHotel();
                             }}
                             />} label="Kart Erişimi" />
                         </Grid>
                         <Grid item md={this.dialogGridMdSize}>
                         <FormControlLabel control={<Checkbox
-                            defaultChecked
+                            checked={this.state.hotel.accessEKey}
                             onChange={(event,checked)=>{
-                                this.state.hotel.accessEKey = checked;
+                                if(checked === this.state.hotel.accessEKey) return;
+                                this.setState({
+                                    user:{...this.state.user,accessEKey:checked}
+                                })
+                                this.validateAndSetHotel();
                             }}
                             />} label="Kilit Erişimi" />
                         </Grid>
                         <Grid item md={this.dialogGridMdSize}>
                         <FormControlLabel control={<Checkbox
-                            defaultChecked
+                            checked={this.state.hotel.accessPasscode}
                             onChange={(event,checked)=>{
-                                this.state.hotel.accessPasscode = checked;
+                                if(checked === this.state.hotel.accessPasscode) return;
+                                this.setState({
+                                    user:{...this.state.user,accessPasscode:checked}
+                                })
+                                this.validateAndSetHotel();
                             }}
                             />} label="Parola Erişimi" />
                         </Grid>

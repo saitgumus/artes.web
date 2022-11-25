@@ -152,7 +152,6 @@ class Home extends Component {
     }
 
     onCreate =async (hotelContract) => {
-        debugger;
         var hotelModel = new HotelModel();
         hotelModel = {...hotelContract};
         hotelModel.allowGeneralCard = false;
@@ -171,8 +170,6 @@ class Home extends Component {
     }
 
     onUpdate =async (hotelContract) => {
-        console.log("update hotel:",hotelContract);
-        debugger;
         var hotelModel = new HotelModel();
         hotelModel = {...hotelContract};
         hotelModel.allowGeneralCard = false;

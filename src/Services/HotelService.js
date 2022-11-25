@@ -60,7 +60,7 @@ export async function UpdateHotel(model) {
     let returnObject = new Response();
     let url = CommonTypes.GetUrlForAPI("hotels","update-hotel");
 
-    await HttpClientServiceInstance.put(url,model)
+    await HttpClientServiceInstance.post(url,model)
     .then( res => {
         if(res.data && res.data.success){
             returnObject.value = true;
