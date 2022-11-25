@@ -248,10 +248,11 @@ class Home extends Component {
                                     allRowsIndexes,
                                     rowsSelectedIndex
                                 ) => {
-                                 
                                     if(this.state.hotelList && this.state.hotelList.length > 0 && rowsSelectedIndex){
                                         var selectedData = this.state.hotelList[rowsSelectedIndex];
-                                        this.state.selectedHotel = selectedData
+                                        this.setState({
+                                            selectedHotel:selectedData
+                                        })
                                     }
                                 }
                                 }
