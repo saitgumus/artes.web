@@ -19,6 +19,7 @@ import HotelAdd from "./hotel-add";
  * ana sayfa
  */
 class Home extends Component {
+    
     static displayName = Home.name;
 
     constructor(props) {
@@ -67,6 +68,21 @@ class Home extends Component {
         {
             name: "allowGeneralCard",
             label: "Allow General Card",
+            options: {filter: true, sort: true},
+        },
+        {
+            name: "accessCard",
+            label: "Access Card",
+            options: {filter: true, sort: true},
+        },
+        {
+            name: "accessEkey",
+            label: "Access Ekey",
+            options: {filter: true, sort: true},
+        },
+        {
+            name: "accessPasscode",
+            label: "Access Passcode",
             options: {filter: true, sort: true},
         }
     ];
@@ -136,7 +152,6 @@ class Home extends Component {
     }
 
     onCreate =async (hotelContract) => {
-        debugger;
         var hotelModel = new HotelModel();
         hotelModel = {...hotelContract};
         hotelModel.allowGeneralCard = false;
@@ -155,8 +170,6 @@ class Home extends Component {
     }
 
     onUpdate =async (hotelContract) => {
-        console.log("update hotel:",hotelContract);
-        debugger;
         var hotelModel = new HotelModel();
         hotelModel = {...hotelContract};
         hotelModel.allowGeneralCard = false;

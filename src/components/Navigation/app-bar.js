@@ -243,6 +243,10 @@ function AppBarMenu(props) {
               <ListItemIcon>{GetIcon(CommonTypes.Iconkeys.paydue)}</ListItemIcon>
                 <ListItemText primary={"Device"} />
               </ListItem>
+              <ListItem button component={Link} to={"/user"}>
+              <ListItemIcon>{GetIcon(CommonTypes.Iconkeys.profile)}</ListItemIcon>
+                <ListItemText primary={"User"} />
+              </ListItem>
             </List>
           </AccordionDetails>
         </Accordion>

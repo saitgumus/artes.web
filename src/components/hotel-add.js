@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Avatar, Card, CardContent, CardHeader, Grid, TextField} from "@material-ui/core";
-import {GetIntValue, IsNullOrEmpty, IsNullOrEmptyAll, ShowStatusError} from "../Core/Helper";
+import {Avatar, Card, CardContent, CardHeader, Checkbox, FormControlLabel, Grid, TextField} from "@material-ui/core";
+import {GetIntValue, IsNullOrEmpty, IsNullOrEmptyAll} from "../Core/Helper";
 import ComboBox from "./ToolBox/combo-box";
 import PropTypes from "prop-types";
 
@@ -358,6 +358,42 @@ class HotelAdd extends Component {
                                     this.setState({validation:validObj})
                                 }}
                             />
+                        </Grid>
+                        <Grid item md={this.dialogGridMdSize}>
+                        <FormControlLabel control={<Checkbox
+                            checked={this.state.hotel.accessCard}
+                            onChange={(event,checked)=>{
+                                if(checked === this.state.hotel.accessCard) return;
+                                this.setState({
+                                    user:{...this.state.user,accessCard:checked}
+                                })
+                                this.validateAndSetHotel();
+                            }}
+                            />} label="Kart Erişimi" />
+                        </Grid>
+                        <Grid item md={this.dialogGridMdSize}>
+                        <FormControlLabel control={<Checkbox
+                            checked={this.state.hotel.accessEKey}
+                            onChange={(event,checked)=>{
+                                if(checked === this.state.hotel.accessEKey) return;
+                                this.setState({
+                                    user:{...this.state.user,accessEKey:checked}
+                                })
+                                this.validateAndSetHotel();
+                            }}
+                            />} label="Kilit Erişimi" />
+                        </Grid>
+                        <Grid item md={this.dialogGridMdSize}>
+                        <FormControlLabel control={<Checkbox
+                            checked={this.state.hotel.accessPasscode}
+                            onChange={(event,checked)=>{
+                                if(checked === this.state.hotel.accessPasscode) return;
+                                this.setState({
+                                    user:{...this.state.user,accessPasscode:checked}
+                                })
+                                this.validateAndSetHotel();
+                            }}
+                            />} label="Parola Erişimi" />
                         </Grid>
                     </Grid>
                 </CardContent>

@@ -1,4 +1,3 @@
-# #node'un official image'ini kullanin. versiyon 8
 # FROM node:alpine as build
 
 # WORKDIR /app
