@@ -1,24 +1,20 @@
 export default class User {
-  userId;
-  userName;
-  email;
-  firstName;
-  lastName;
-  password;
-  MemberId;
-  token;
-  expiration;
-  fullName;
-  status = true;
-  userType=2;
-  hotelId=1;
+    userId;
+    email;
+    firstName;
+    lastName;
+    password;
+    token;
+    expiration;
+    fullName;
+    status = true;
+    userType = 2;
+    hotelId = 1;
+    claims;
 }
 
 export class Subscription {
-  subscriptionId;
-  userId;
-  startDate;
-  endDate;
-  memberLimit;
-  apartmentLimit;
+    userId;
+    memberLimit;
+    apartmentLimit;
 }

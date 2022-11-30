@@ -1,7 +1,9 @@
-import { CommonTypes } from "../Types/Common";
-import { HttpClientServiceInstance } from "./HttpClient";
-import { Response, Severity } from "../Core/Response";
+import {CommonTypes} from "../Types/Common";
+import {HttpClientServiceInstance} from "./HttpClient";
+import {Response, Severity} from "../Core/Response";
 import User from "../Models/User";
+import {OperationClaim} from "../Models/OperationClaim";
+import Cache from "./Cache";
 
 /**
  * login the user
@@ -10,48 +12,54 @@ import User from "../Models/User";
  * @constructor
  */
 export async function LoginUser(userContract) {
-  let response = new Response();
-  let contract = userContract;
-  let url = CommonTypes.GetUrlForAPI("auth", "login");
+    let response = new Response();
+    let contract = userContract;
+    let url = CommonTypes.GetUrlForAPI("auth", "login");
 
-  await HttpClientServiceInstance.post(url, contract)
-    .then((res) => {
-      if (res.data.success) {
-        //parola değişikliği gerekiyor mu?
-        if (
-          res.data.data.accessToken &&
-          res.data.value.accessToken.token &&
-          res.data.value.accessToken.token.length > 0 &&
-          res.data.value.shouldNewPassword
-        ) {
-          HttpClientServiceInstance.setTokenOnLogin(
-            res.data.value.accessToken.token
-          );
-          response.value = { shouldNewPassword: true };
-        } else {
+    await HttpClientServiceInstance.post(url, contract)
+        .then((res) => {
+            if (res.data.success) {
+                //parola değişikliği gerekiyor mu?
+                if (
+                    res.data.data.accessToken &&
+                    res.data.value.accessToken.token &&
+                    res.data.value.accessToken.token.length > 0 &&
+                    res.data.value.shouldNewPassword
+                ) {
+                    HttpClientServiceInstance.setTokenOnLogin(
+                        res.data.value.accessToken.token
+                    );
+                    response.value = {shouldNewPassword: true};
+                } else {
 
-          if(res.data.data && res.data.data.token){
-            let token = res.data.data.token;
-            let expriation = res.data.data.expiration;
-            HttpClientServiceInstance.setTokenOnLogin(token);
+                    if (res.data.data && res.data.data.token) {
+                        const claims = res.data.data.claims;
+                        let token = res.data.data.token;
+                        let expriation = res.data.data.expiration;
+                        HttpClientServiceInstance.setTokenOnLogin(token);
 
-            let user = new User();
-            user.token = token;
-            user.expiration = expriation;
-            response.value = user;
-          }else {
-            response.addResult("Token bilgisi alınamadı.",Severity.High);
-          }
-        }
-      } else {
-        response.addCoreResults(res.data.results);
-      }
-    })
-    .catch((e) => {
-      response.addResult(e.message, Severity.High, "login");
-    });
+                        let user = new User();
+                        user.token = token;
+                        user.expiration = expriation;
 
-  return response;
+                        if (claims) {
+                            user.claims = Object.keys(OperationClaim).filter(oc => claims.includes(oc));
+                            Cache.overrideItem('user-claims', user.claims);
+                        }
+                        response.value = user;
+                    } else {
+                        response.addResult("Token bilgisi alınamadı.", Severity.High);
+                    }
+                }
+            } else {
+                response.addCoreResults(res.data.results);
+            }
+        })
+        .catch((e) => {
+            response.addResult(e.message, Severity.High, "login");
+        });
+
+    return response;
 }
 
 /**
@@ -59,22 +67,22 @@ export async function LoginUser(userContract) {
  * @param {userContract} userContract
  */
 export async function ForgotPassword(userContract) {
-  let ro = new Response();
-  let contract = userContract;
-  let url = CommonTypes.GetUrlForAPI("user", "forgotpassword");
+    let ro = new Response();
+    let contract = userContract;
+    let url = CommonTypes.GetUrlForAPI("user", "forgotpassword");
 
-  await HttpClientServiceInstance.post(url, contract)
-    .then((res) => {
-      if (res.data && res.data.success) {
-        ro.value = res.data.value;
-      } else {
-        ro.addCoreResults(res.data.results);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  return ro;
+    await HttpClientServiceInstance.post(url, contract)
+        .then((res) => {
+            if (res.data && res.data.success) {
+                ro.value = res.data.value;
+            } else {
+                ro.addCoreResults(res.data.results);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    return ro;
 }
 
 /**
@@ -82,105 +90,105 @@ export async function ForgotPassword(userContract) {
  * @param {string} password
  */
 export async function SetNewPassword(password, email) {
-  let ro = new Response();
-  let contract = new User();
-  contract.email = email;
-  contract.password = password;
+    let ro = new Response();
+    let contract = new User();
+    contract.email = email;
+    contract.password = password;
 
-  let url = CommonTypes.GetUrlForAPI("user", "newpassword");
+    let url = CommonTypes.GetUrlForAPI("user", "newpassword");
 
-  await HttpClientServiceInstance.post(url, contract)
-    .then((res) => {
-      if (res.data && res.data.success) {
-        ro.value = res.data.value;
-        return ro;
-      } else {
-        ro.addCoreResults(res.data.results);
-        return ro;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      ro.addResult("Parola değişikliği yapılamadı.");
-      return ro;
-    });
+    await HttpClientServiceInstance.post(url, contract)
+        .then((res) => {
+            if (res.data && res.data.success) {
+                ro.value = res.data.value;
+                return ro;
+            } else {
+                ro.addCoreResults(res.data.results);
+                return ro;
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            ro.addResult("Parola değişikliği yapılamadı.");
+            return ro;
+        });
 }
 
 /**
  * add a new artes user
- * @param {UserModel} userContract 
- * @returns 
+ * @param {UserModel} userContract
+ * @returns
  */
 export async function AddUser(userContract) {
-  let response = new Response();
-  let contract = userContract;
-  let url = CommonTypes.GetUrlForAPI("users", "add");
+    let response = new Response();
+    let contract = userContract;
+    let url = CommonTypes.GetUrlForAPI("users", "add");
 
-  await HttpClientServiceInstance.post(url, contract)
-    .then((res) => {
-      if (res.data.success) {
-        response.value = res.data;
-      } else {
-        response.addCoreResults(res.data.results);
-      }
-    })
-    .catch((e) => {
-      response.addResult(e.message, Severity.High, "user-add");
-    });
+    await HttpClientServiceInstance.post(url, contract)
+        .then((res) => {
+            if (res.data.success) {
+                response.value = res.data;
+            } else {
+                response.addCoreResults(res.data.results);
+            }
+        })
+        .catch((e) => {
+            response.addResult(e.message, Severity.High, "user-add");
+        });
 
-  return response;
+    return response;
 
 }
 
 /**
  * update user
- * @param {UserModel} userContract 
- * @returns 
+ * @param {UserModel} userContract
+ * @returns
  */
 export async function UpdateUser(userContract) {
-  let response = new Response();
-  let contract = userContract;
-  let url = CommonTypes.GetUrlForAPI("users", "update");
+    let response = new Response();
+    let contract = userContract;
+    let url = CommonTypes.GetUrlForAPI("users", "update");
 
-  await HttpClientServiceInstance.post(url, contract)
-    .then((res) => {
-      if (res.data.success) {
-        response.value = res.data;
-      } else {
-        response.addCoreResults(res.data.results);
-      }
-    })
-    .catch((e) => {
-      response.addResult(e.message, Severity.High, "user-update");
-    });
+    await HttpClientServiceInstance.post(url, contract)
+        .then((res) => {
+            if (res.data.success) {
+                response.value = res.data;
+            } else {
+                response.addCoreResults(res.data.results);
+            }
+        })
+        .catch((e) => {
+            response.addResult(e.message, Severity.High, "user-update");
+        });
 
-  return response;
+    return response;
 
 }
 
 /**
  * delete user
- * @param {UserModel} userContract 
- * @returns 
+ * @param {UserModel} userContract
+ * @returns
  */
- export async function DeleteUser(userContract) {
-  let response = new Response();
-  let contract = userContract;
-  let url = CommonTypes.GetUrlForAPI("users", "");
+export async function DeleteUser(userContract) {
+    let response = new Response();
+    let contract = userContract;
+    let url = CommonTypes.GetUrlForAPI("users", "");
 
-  await HttpClientServiceInstance.delete(url, contract)
-    .then((res) => {
-      if (res.data.success) {
-        response.value = res.data;
-      } else {
-        response.addCoreResults(res.data.results);
-      }
-    })
-    .catch((e) => {
-      response.addResult(e.message, Severity.High, "user-update");
-    });
+    await HttpClientServiceInstance.delete(url, contract)
+        .then((res) => {
+            if (res.data.success) {
+                response.value = res.data;
+            } else {
+                response.addCoreResults(res.data.results);
+            }
+        })
+        .catch((e) => {
+            response.addResult(e.message, Severity.High, "user-update");
+        });
 
-  return response;
+    return response;
 
 }
 
@@ -189,25 +197,64 @@ export async function UpdateUser(userContract) {
  * @returns Users
  */
 export async function GetUsers() {
-  let returnObject = new Response();
-  
-  let url = CommonTypes.GetUrlForAPI("users","getall");
+    let returnObject = new Response();
+    let url = CommonTypes.GetUrlForAPI("users", "getall");
 
-  await HttpClientServiceInstance.get(
-      url
-  ).then( res => {
-    
-      if(res.data && res.data.success){
-          returnObject.value = res.data.data;
-      }
-      else{
-          returnObject.addResult(res.data && res.data.errorMessage,Severity.High,"GETUSERS");
-      }
-  })
-  .catch(err => {
-      returnObject.addResult("user listesi getirilemedi.");
-  });
 
-  return returnObject;
+    await HttpClientServiceInstance.get(
+        url
+    ).then(res => {
+        if (res.data && res.data.success) {
+            returnObject.value = res.data.data;
+        } else {
+            returnObject.addResult(res.data && res.data.errorMessage, Severity.High, "GETUSERS");
+        }
+    })
+        .catch(err => {
+            returnObject.addResult("user listesi getirilemedi.");
+        });
+
+    return returnObject;
 }
 
+export async function SetUserClaims(userId, claims) {
+    let response = new Response();
+    let url = CommonTypes.GetUrlForAPI("userclaims", '');
+
+    console.log('send userId ', userId, ' claims ', claims);
+
+    await HttpClientServiceInstance.put(url, {
+        userId,
+        claimId: claims
+    })
+        .then((res) => {
+            if (res.data.success) {
+                response.value = res.data;
+            }
+        })
+        .catch((e) => {
+            response.addResult(e.message, Severity.High, "user-claim-update");
+        });
+
+    return response;
+}
+
+export async function GetClaimsByUserId(userId) {
+    let returnObject = new Response();
+    let url = CommonTypes.GetUrlForAPI("userclaims", "getbyuserid");
+
+    await HttpClientServiceInstance.get(
+        url.concat('?userid=', userId),
+    ).then(res => {
+        if (res.data) {
+            returnObject.value = res.data.length ? res.data.map(val => val.claimId) : [];
+        } else {
+            returnObject.addResult('kullanıcı yetki bilgisi getirilemedi', Severity.High, "GETUSERCLAIMS");
+        }
+    })
+        .catch(err => {
+            returnObject.addResult("user claim listesi getirilemedi.");
+        });
+
+    return returnObject;
+}

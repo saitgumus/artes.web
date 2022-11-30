@@ -26,26 +26,26 @@ class DeviceComponent extends Component {
 
         this.state = {
             isOpenDialogForm: false,
-            isOpenDialogForUpdate:false,
+            isOpenDialogForUpdate: false,
             device: {},
-            deviceList:[],
-            hotelList:[],
-            isLoading:true,
-            selectedDevice:{},
-            isAddedDeviceValid:false
+            deviceList: [],
+            hotelList: [],
+            isLoading: true,
+            selectedDevice: {},
+            isAddedDeviceValid: false
         };
     }
 
     columns = [
         {
-            name:"brasscoDeviceId",
-            label:"Id",
-            options:{filter: true, sort: true}
+            name: "brasscoDeviceId",
+            label: "Id",
+            options: {filter: true, sort: true}
         },
         {
-            name:"deviceTypeCd",
-            label:"Type",
-            options:{filter: true, sort: true}
+            name: "deviceTypeCd",
+            label: "Type",
+            options: {filter: true, sort: true}
         },
         {
             name: "uniqueCode",
@@ -73,10 +73,10 @@ class DeviceComponent extends Component {
         this.onLoad();
     }
 
-    onLoad = async ()=>{
-        await Promise.all([this.getList(),this.getHotels()])
+    onLoad = async () => {
+        await Promise.all([this.getList(), this.getHotels()])
         this.setState({
-            isLoading:false
+            isLoading: false
         });
     }
 
@@ -86,45 +86,46 @@ class DeviceComponent extends Component {
         switch (key) {
             ///create device
             case CommonTypes.ActionKeys.CreateDevice:
-                this.setState({isOpenDialogForm: true,isOpenDialogForUpdate:false})
+                this.setState({isOpenDialogForm: true, isOpenDialogForUpdate: false})
                 break;
-            
+
             case CommonTypes.ActionKeys.DeleteDevice:
-                if(!this.state.selectedDevice.brasscoDeviceId || this.state.selectedDevice.brasscoDeviceId < 1){
+                if (!this.state.selectedDevice.brasscoDeviceId || this.state.selectedDevice.brasscoDeviceId < 1) {
                     ShowStatusError("işlem yapmak için kayıt seçmeniz gerekmektedir.");
                     return;
                 }
-                    this.setState({isOpenDialogForm: true,isOpenDialogForUpdate:true})
-                    break;    
-            case CommonTypes.ActionKeys.GetList:
+                DeleteDevice(this.state.selectedDevice)
+                break;
+            case CommonTypes.ActionKeys.Refresh:
                 this.getList();
                 break;
 
-                default:
+            default:
                 break;
         }
     };
 
     dialogGridMdSize = 7;
 
-    async getList(){
-        this.setState({isLoading:true})
+    getList = async () => {
+        this.setState({isLoading: true})
         GetDevices()
             .then(response => {
-             if(!response.success){
-                 ShowStatusError(response.getResultsStringFormat());
-             }
-             if(response.value && response.value.length > 0){
-                 this.setState({deviceList:response.value,isLoading:false})
-             }
+                if (!response.success) {
+                    ShowStatusError(response.getResultsStringFormat());
+                }
+                if (response.value && response.value.length > 0) {
+                    this.setState({deviceList: response.value, isLoading: false})
+                }
             })
             .catch(
-                e=>{
+                e => {
                     ShowStatusError(e.message);
-                    this.setState({isLoading:false})
+                    this.setState({isLoading: false})
                 }
             )
     }
+
     getHotels = async () => {
         await GetHotels()
             .then(
@@ -146,23 +147,23 @@ class DeviceComponent extends Component {
                 ShowStatusError("hotel listesi getirilemedi.");
             })
     }
-    onCreate =async (deviceContract) => {
+    onCreate = async (deviceContract) => {
         let deviceModel = new DeviceModel();
         deviceModel = {...deviceContract};
 
         var response = await SaveDevice(deviceModel);
-        if(!response || !response.success){
+        if (!response || !response.success) {
             ShowStatusError(response.getResultsStringFormat());
             return;
         }
-        if(response && response.success){
+        if (response && response.success) {
             ShowStatusSuccess("kayıt başarılı");
             await this.getList();
         }
     }
 
-    onDelete =async (deviceContract) => {
-        if(!deviceContract || !deviceContract.brasscoDeviceId){
+    onDelete = async (deviceContract) => {
+        if (!deviceContract || !deviceContract.brasscoDeviceId) {
             alert('device id bilgisi dolu olmalıdır!');
             return;
         }
@@ -170,11 +171,11 @@ class DeviceComponent extends Component {
         deviceModel = {...deviceContract};
 
         var response = await DeleteDevice(deviceModel);
-        if(!response || !response.success){
+        if (!response || !response.success) {
             ShowStatusError(response.getResultsStringFormat());
             return;
         }
-        if(response && response.success){
+        if (response && response.success) {
             ShowStatusSuccess("silindi.");
             await this.getList();
         }
@@ -191,19 +192,19 @@ class DeviceComponent extends Component {
         return this.state.isAddedDeviceValid;
     }
 
-    setDevice = (device)=>{
+    setDevice = (device) => {
         this.setState({
-            device:device,
-            isAddedDeviceValid:true
+            device: device,
+            isAddedDeviceValid: true
         });
     }
 
     render() {
         return (
             <LoadingOverlay
-            active={this.state.isLoading}
-            spinner
-            text={'loading...'}>
+                active={this.state.isLoading}
+                spinner
+                text={'loading...'}>
                 <Grid container direction="column" spacing={3}>
 
                     <Grid item>
@@ -221,7 +222,7 @@ class DeviceComponent extends Component {
                                     allRowsIndexes,
                                     rowsSelectedIndex
                                 ) => {
-                                    if(this.state.deviceList && this.state.deviceList.length > 0 && rowsSelectedIndex){
+                                    if (this.state.deviceList && this.state.deviceList.length > 0 && rowsSelectedIndex) {
                                         var selectedData = this.state.deviceList[rowsSelectedIndex];
                                         // eslint-disable-next-line react/no-direct-mutation-state
                                         this.state.selectedDevice = selectedData
@@ -231,7 +232,7 @@ class DeviceComponent extends Component {
                             />
                         </Card>
                     </Grid>
-                   {this.state.isOpenDialogForm ? (
+                    {this.state.isOpenDialogForm ? (
                         <DialogForm
                             count={this.state.renderCount}
                             title={"Create Device"}
@@ -239,23 +240,22 @@ class DeviceComponent extends Component {
                                 hotelList={this.state.hotelList}
                                 setDevice={this.setDevice}
                                 isUpdate={this.state.isOpenDialogForUpdate}
-                                deviceModel={this.state.isOpenDialogForUpdate ? this.state.selectedDevice : undefined} />)}
+                                deviceModel={this.state.isOpenDialogForUpdate ? this.state.selectedDevice : undefined}/>)}
                             handleClose={this.handleCloseDialog}
                             actions={(
                                 <Button autoFocus
                                         disabled={!this.state.isAddedDeviceValid}
-                                        onClick={()=>{
-                                    if(!this.validateCreateModel()){
-                                        return;
-                                    }
-                                    this.handleCloseDialog()
-                                    if(this.state.isOpenDialogForUpdate){
-                                        this.onUpdate(this.state.device)
-                                    }
-                                    else{
-                                        this.onCreate(this.state.device)
-                                    }
-                                }} color="primary">
+                                        onClick={() => {
+                                            if (!this.validateCreateModel()) {
+                                                return;
+                                            }
+                                            this.handleCloseDialog()
+                                            if (this.state.isOpenDialogForUpdate) {
+                                                this.onUpdate(this.state.device)
+                                            } else {
+                                                this.onCreate(this.state.device)
+                                            }
+                                        }} color="primary">
                                     Kaydet
                                 </Button>
                             )}
@@ -266,7 +266,7 @@ class DeviceComponent extends Component {
                 </Grid>
             </LoadingOverlay>
 
-    );
+        );
     }
 }
 

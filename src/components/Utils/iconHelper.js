@@ -11,34 +11,38 @@ import ProfileIcon from "@material-ui/icons/AccountBoxRounded";
 import ApartmentRoundedIcon from "@material-ui/icons/ApartmentRounded";
 import PaymentIcon from "@material-ui/icons/Payment";
 
-import { CommonTypes } from "../../Types/Common";
+import {CommonTypes} from "../../Types/Common";
 import React from "react";
+import {ExitToApp} from "@material-ui/icons";
 
 export default function GetIcon(iconKey) {
-  switch (iconKey) {
-    case CommonTypes.Iconkeys.inbox:
-      return <InboxIcon />;
-    case CommonTypes.Iconkeys.viewlist:
-      return <ViewListRoundedIcon />;
-    case CommonTypes.Iconkeys.personadd:
-      return <PersonAddIcon />;
-    case CommonTypes.Iconkeys.howtovote:
-      return <HowToVoteRoundedIcon />;
-    case CommonTypes.Iconkeys.home:
-      return <HomeIcon />;
-    case CommonTypes.Iconkeys.addChart:
-      return <AddBox />;
-    case CommonTypes.Iconkeys.listChart:
-      return <ListAltRoundedIcon />;
-    case CommonTypes.Iconkeys.paydue:
-      return <PaymentIcon />;
-    case CommonTypes.Iconkeys.updown:
-      return <ThumbsUpDownRoundedIcon />;
-    case CommonTypes.Iconkeys.profile:
-      return <ProfileIcon />;
-    case CommonTypes.Iconkeys.apartment:
-      return <ApartmentRoundedIcon />;
-    default:
-      return <InboxIcon />;
-  }
+    switch (iconKey) {
+        case CommonTypes.Iconkeys.inbox:
+            return <InboxIcon/>;
+        case CommonTypes.Iconkeys.viewlist:
+            return <ViewListRoundedIcon/>;
+        case CommonTypes.Iconkeys.personadd:
+            return <PersonAddIcon/>;
+        case CommonTypes.Iconkeys.howtovote:
+            return <HowToVoteRoundedIcon/>;
+        case CommonTypes.Iconkeys.home:
+            return <HomeIcon/>;
+        case CommonTypes.Iconkeys.addChart:
+            return <AddBox/>;
+        case CommonTypes.Iconkeys.listChart:
+            return <ListAltRoundedIcon/>;
+        case CommonTypes.Iconkeys.paydue:
+            return <PaymentIcon/>;
+        case CommonTypes.Iconkeys.updown:
+            return <ThumbsUpDownRoundedIcon/>;
+        case CommonTypes.Iconkeys.profile:
+            return <ProfileIcon/>;
+        case CommonTypes.Iconkeys.apartment:
+            return <ApartmentRoundedIcon/>;
+        case CommonTypes.Iconkeys.logout:
+            return <ExitToApp/>;
+
+        default:
+            return <InboxIcon/>;
+    }
 }

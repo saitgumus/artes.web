@@ -83,6 +83,10 @@ class HotelAdd extends Component {
         this.state.hotel.hotelAdminMail,this.state.hotel.address,this.state.hotel.mobileNumber,this.state.hotel.validSectors])){
         return;
     }
+
+    console.log(this.state.hotel);
+    
+    
     if(GetIntValue(this.state.hotel.hotelCode)< 1 ||
         GetIntValue(this.state.hotel.countryCode)< 1 ||
         GetIntValue(this.state.hotel.mobileCountryCode)< 1){
@@ -142,6 +146,7 @@ class HotelAdd extends Component {
                             <TextField
                                 fullWidth
                                 required
+                                disabled={this.state.isUpdate}
                                 error={!this.state.validation.hotelCode.isValid}
                                 helperText={this.state.validation.hotelCode.helperText}
                                 type={"number"}
@@ -221,6 +226,7 @@ class HotelAdd extends Component {
                                 helperText={this.state.validation.hotelAdminMail.helperText}
                                 label="Admin Email"
                                 variant="standard"
+                                disabled={this.state.isUpdate}
                                 value={this.state.hotel.hotelAdminMail}
                                 onChange={(e) => {
                                     //this.state.hotel.hotelAdminMail = e.target.value;
@@ -365,21 +371,27 @@ class HotelAdd extends Component {
                             onChange={(event,checked)=>{
                                 if(checked === this.state.hotel.accessCard) return;
                                 this.setState({
-                                    user:{...this.state.user,accessCard:checked}
+                                    hotel:{...this.state.hotel,accessCard:checked}
+                                },()=>{
+                                    this.validateAndSetHotel();    
                                 })
-                                this.validateAndSetHotel();
                             }}
                             />} label="Kart Erişimi" />
                         </Grid>
                         <Grid item md={this.dialogGridMdSize}>
                         <FormControlLabel control={<Checkbox
-                            checked={this.state.hotel.accessEKey}
+                            checked={this.state.hotel.accessEkey}
                             onChange={(event,checked)=>{
-                                if(checked === this.state.hotel.accessEKey) return;
+                                if(this.state.hotel.accessEkey && checked === this.state.hotel.accessEkey) return;
+
+                                let hotel = {...this.state.hotel};
+                                hotel.accessEkey = checked;
                                 this.setState({
-                                    user:{...this.state.user,accessEKey:checked}
+                                    hotel
+                                },()=>{
+                                    this.validateAndSetHotel();
                                 })
-                                this.validateAndSetHotel();
+                                
                             }}
                             />} label="Kilit Erişimi" />
                         </Grid>
@@ -389,9 +401,11 @@ class HotelAdd extends Component {
                             onChange={(event,checked)=>{
                                 if(checked === this.state.hotel.accessPasscode) return;
                                 this.setState({
-                                    user:{...this.state.user,accessPasscode:checked}
+                                    hotel:{...this.state.hotel,accessPasscode:checked}
+                                },()=>{
+                                    this.validateAndSetHotel();
                                 })
-                                this.validateAndSetHotel();
+                                
                             }}
                             />} label="Parola Erişimi" />
                         </Grid>
